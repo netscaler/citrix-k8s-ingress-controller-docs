@@ -10,37 +10,33 @@ Citrix ADC metrics exporter is a simple server that collects Citrix ADC stats an
 
 Prometheus Operator has an expansive method of monitoring services on Kubernetes. To get started, this topic uses `kube-prometheus` and its manifest files. The manifest files help you to deploy a basic working model. Deploy the Prometheus Operator in your Kubernetes environment using the following commands:
 
-```
-git clone https://github.com/coreos/prometheus-operator.git
+    git clone https://github.com/coreos/prometheus-operator.git
 
-kubectl create -f prometheus-operator/contrib/kube-prometheus/manifests/
-```
+    kubectl create -f prometheus-operator/contrib/kube-prometheus/manifests/
+
 
 Once you deploy [Prometheus-Operator](https://github.com/coreos/prometheus-operator), several pods and services are deployed, of which `prometheus-k8s-xx` pods are for metrics aggregation and timestamping and `grafana` pods are for visualization. If you view all the container images running in the cluster, you can see the following output:
 
-```
-$ kubectl get pods -n monitoring
-NAME                                   READY     STATUS    RESTARTS   AGE
-alertmanager-main-0                    2/2       Running   0          2h
-alertmanager-main-1                    2/2       Running   0          2h
-alertmanager-main-2                    2/2       Running   0          2h
-grafana-5b68464b84-5fvxq               1/1       Running   0          2h
-kube-state-metrics-6588b6b755-d6ftg    4/4       Running   0          2h
-node-exporter-4hbcp                    2/2       Running   0          2h
-node-exporter-kn9dg                    2/2       Running   0          2h
-node-exporter-tpxhp                    2/2       Running   0          2h
-prometheus-k8s-0                       3/3       Running   1          2h
-prometheus-k8s-1                       3/3       Running   1          2h
-prometheus-operator-7d9fd546c4-m8t7v   1/1       Running   0          2h
-```
+    $ kubectl get pods -n monitoring
+    NAME                                   READY     STATUS    RESTARTS   AGE
+    alertmanager-main-0                    2/2       Running   0          2h
+    alertmanager-main-1                    2/2       Running   0          2h
+    alertmanager-main-2                    2/2       Running   0          2h
+    grafana-5b68464b84-5fvxq               1/1       Running   0          2h
+    kube-state-metrics-6588b6b755-d6ftg    4/4       Running   0          2h
+    node-exporter-4hbcp                    2/2       Running   0          2h
+    node-exporter-kn9dg                    2/2       Running   0          2h
+    node-exporter-tpxhp                    2/2       Running   0          2h
+    prometheus-k8s-0                       3/3       Running   1          2h
+    prometheus-k8s-1                       3/3       Running   1          2h
+    prometheus-operator-7d9fd546c4-m8t7v   1/1       Running   0          2h
 
-> NOTE
->
-> It is recommended to expose the Prometheus and Grafana pods through NodePorts. To do so, you need to modify the `prometheus-service.yaml` and `grafana-service.yaml` files as follows:
+!!! note "Note"
+    It is recommended to expose the Prometheus and Grafana pods through NodePorts. To do so, you need to modify the `prometheus-service.yaml` and `grafana-service.yaml` files as follows:
 
 **prometheus-service.yaml**:
 
-```
+```yml
 apiVersion: v1
 kind: Service
 metadata:
@@ -59,7 +55,9 @@ spec:
     prometheus: k8s
 ```
 
-To apply these changes into the kubernetes cluster use the following command: `kubectl apply -f prometheus-service.yaml`.
+To apply these changes into the kubernetes cluster use the following command:
+
+    kubectl apply -f prometheus-service.yaml
 
 **grafana-service.yaml**:
 
@@ -79,7 +77,9 @@ spec:
     app: grafana
 ```
 
-To apply these changes into the kubernetes cluster use the following command: `kubectl apply -f grafana-service.yaml`.
+To apply these changes into the kubernetes cluster use the following command:
+
+    kubectl apply -f grafana-service.yaml
 
 ## Configuring Citrix ADC metrics exporter
 
@@ -282,7 +282,7 @@ spec:
 
 The Citrix ADC instances which were detected for monitoring appears in the `Targets` page of the prometheus container. It can be accessed using `http://<k8s_cluster_ip>:<prometheus_nodeport>/targets` and looks like the following image:
 
-![metrics](../Images/metrics.png)
+![metrics](../media/metrics.png)
 
 To view the metrics graphically:
 
@@ -290,10 +290,10 @@ To view the metrics graphically:
 
 1.  Import the [sample grafana dashboard](https://github.com/citrix/netscaler-metrics-exporter/blob/master/sample_grafana_dashboard.json) by selecting the `+` icon on the left panel and clicking import.
 
-    ![metrics-graph](../Images/metrics-graph.png)
+    ![metrics-graph](../media/metrics-graph.png)
 
 1.  A dashboard containing graphs similar to the following should appear:
 
-    ![dashboard](../Images/dashboard.png)
+    ![dashboard](../media/dashboard.png)
 
 1.  The dashboard can be further enhanced using Grafana's [documentation](http://docs.grafana.org/) or [demo videos](https://www.youtube.com/watch?v=mgcJPREl3CU).

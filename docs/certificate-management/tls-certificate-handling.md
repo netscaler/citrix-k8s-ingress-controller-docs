@@ -102,7 +102,7 @@ spec:
 
 If the secret name is provided without the host section, CIC binds the secret as a non-SNI certificate.
 
-```YAML
+```yml
 spec:
   tls:
   - secretName: colddrink.secret

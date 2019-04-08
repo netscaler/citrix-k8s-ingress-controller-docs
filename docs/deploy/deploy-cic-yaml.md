@@ -2,9 +2,9 @@
 
 You can deploy Citrix Ingress Controller (CIC) in the following modes:
 
--  As a standalone pod in the Kubernetes cluster. Use this mode if you are controlling Citrix ADCs (Citrix ADC MPX or Citrix ADC VPX) outside the cluster. For example, with [dual-tier](/Docs/overview.md#dual-tier-topology) topologies, or [single-tier](/Docs/overview.md#single-tier-topology) topology where the single tier is a Citrix ADC MPX or VPX. [FIXME: links to topology (***FIXED***)]
+-  As a standalone pod in the Kubernetes cluster. Use this mode if you are controlling Citrix ADCs (Citrix ADC MPX or Citrix ADC VPX) outside the cluster. For example, with [dual-tier](../deployment-topologies.md#dual-tier-topology) topologies, or [single-tier]../deployment-topologies.md#single-tier-topology) topology where the single tier is a Citrix ADC MPX or VPX.
 
--  As a sidecar (in the same pod) with Citrix ADC CPX in the Kubernetes cluster. The sidecar controller is only responsible for the associated Citrix ADC CPX within the same pod. This mode is used in [dual-tier](/Docs/overview.md#dual-tier-topology) or [cloud](/Docs/overview.md#cloud-topology)) topologies. [FIXME: links to topologies (***FIXED***)]
+-  As a sidecar (in the same pod) with Citrix ADC CPX in the Kubernetes cluster. The sidecar controller is only responsible for the associated Citrix ADC CPX within the same pod. This mode is used in [dual-tier](../deployment-topologies.md#dual-tier-topology) or [cloud](../deployment-topologies.md#cloud-topology)) topologies.
 
 ## Deploying CIC as a standalone pod in the Kubernetes cluster for Citrix ADC MPX or VPX appliances
 
@@ -23,9 +23,7 @@ Use the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8
 
     You can directly pass the username and password as environment variables to the controller, or use Kubernetes secrets (recommended). If you want to use Kubernetes secrets, create a secret for the username and password using the following command:
 
-    ```bash
-    kubectl create secret  generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
-    ```
+        kubectl create secret  generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
 
 #### Create System User Account for CIC in Citrix ADC
 
@@ -42,10 +40,6 @@ Citrix Ingress Controller (CIC) configures the Citrix ADC appliance (MPX or VPX)
 -  Configure Virtual IP address (VIP)
 -  Check the status of the Citrix ADC appliance
 
->**Note:**
->
->The system user account would have privileges based on the command policy that you define.
-
 To create the system user account, do the following:
 
 1.  Log on to the Citrix ADC appliance. Perform the following:
@@ -53,39 +47,30 @@ To create the system user account, do the following:
 
     1.  Log on to the appliance by using the administrator credentials.
 
-    [FIXME link on how to do this] [FIXME: what privilege level is this user? (***FIXED***)]
-
 1.  Create the system user account using the following command:
 
-    ```
-    add system user <username> <password>
-    ```
+        add system user <username> <password>
 
     For example:
 
-    ```
-    add system user cic mypassword
-    ```
+        add system user cic mypassword
 
 1.  Create a policy to provide required permissions to the system user account. Use the following command:
 
-    ```
-    add cmdpolicy cic-policy ALLOW "(^\S+\s+cs\s+\S+)|(^\S+\s+lb\s+\S+)|(^\S+\s+service\s+\S+)|(^\S+\s+servicegroup\s+\S+)|(^stat\s+system)|(^show\s+ha)|(^\S+\s+ssl\s+certKey)|(^\S+\s+ssl)|(^\S+\s+route)|(^\S+\s+monitor)|(^show\s+ns\s+ip)|(^\S+\s+system\s+file)"
-    ```
+        add cmdpolicy cic-policy ALLOW "(^\S+\s+cs\s+\S+)|(^\S+\s+lb\s+\S+)|(^\S+\s+service\s+\S+)|(^\S+\s+servicegroup\s+\S+)|(^stat\s+system)|(^show\s+ha)|(^\S+\s+ssl\s+certKey)|(^\S+\s+ssl)|(^\S+\s+route)|(^\S+\s+monitor)|(^show\s+ns\s+ip)|(^\S+\s+system\s+file)"
+
+    !!! note "Note"
+        The system user account would have the privileges based on the command policy that you define.
 
 1.  Bind the policy to the system user account using the following command:
-   
-    ```
-    bind system user cic cic-policy 0
-    ```
+
+        bind system user cic cic-policy 0
 
 **To deploy CIC as pod, perform the following:**
 
 1.  Download the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) using the following command:
 
-    ```
-    wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
-    ```
+        wget  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml
 
 1.  Edit the [citrix-k8s-ingress-controller.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-ingress-controller.yaml) file and enter the values for the following environmental variables:
 
@@ -93,24 +78,20 @@ To create the system user account, do the following:
     | ---------------------- | ---------------------- | ----------- |
     | NS_IP | Mandatory | The IP address of the Citrix ADC appliance. For more details, see [Prerequisites](#prerequisites). |
     | NS_USER and NS_PASSWORD | Mandatory | The username and password of the Citrix ADC VPX or MPX appliance used as the Ingress device. For more details, see [Prerequisites](#prerequisites). |
-    | EULA | Mandatory | The End User License Agreement. [FIXME: specify the value (EULA=yes?)]|
+    | EULA | Mandatory | The End User License Agreement. Specify the value as `Yes`.|
     | Kubernetes_url | Optional | The kube-apiserver url that CIC uses to register the events. If the value is not specified, CIC uses the [internal kube-apiserver IP address](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#accessing-the-api-from-a-pod). |
-    | LOGLEVEL | Optional | The log levels to control the logs generated by CIC. By default, the value is set to DEBUG. The supported values are: CRITICAL, ERROR, WARNING, INFO, and DEBUG. For more information, see [Logging](/Docs/Logging.md)|
+    | LOGLEVEL | Optional | The log levels to control the logs generated by CIC. By default, the value is set to DEBUG. The supported values are: CRITICAL, ERROR, WARNING, INFO, and DEBUG. For more information, see [Logging](../configure/logging.md)|
     | NS_PROTOCOL and NS_PORT | Optional | Defines the protocol and port that must be used by CIC to communicate with Citrix ADC. By default, CIC uses HTTPs on port 443. You can also use HHTP on port 80. |
-    | ingress-classes | Optional | If multiple ingress load balancers are used to load balance different ingress resources. You can use this environment variable to specify CIC to configure Citrix ADC associated with specific ingress class. [FIXME: need an example] |
+    | ingress-classes | Optional | If multiple ingress load balancers are used to load balance different ingress resources. You can use this environment variable to specify CIC to configure Citrix ADC associated with specific ingress class.|
     | VIP_IP | Optional | CIC uses the IP address provided in this environment variable to configure a virtual IP address to the Citrix ADC that receives Ingress traffic. **Note:** Virtual IP address takes precedence over the [frontend-ip](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/docs/annotations.md) annotation. |
 
 1.  Once you update the environment variables, save the YAML file and deploy it using the following command:
 
-    ```
-    kubectl create -f citrix-k8s-ingress-controller.yaml
-    ```
+        kubectl create -f citrix-k8s-ingress-controller.yaml
 
 1.  Verify if CIC is deployed successfully using the following command:
 
-    ```
-    kubectl get pods --all-namespaces
-    ```
+        kubectl get pods --all-namespaces
 
 ## Deploying CIC as a sidecar with Citrix ADC CPX
 
@@ -118,6 +99,4 @@ Use the [citrix-k8s-cpx-ingress.yaml](https://github.com/citrix/citrix-k8s-ingre
 
 Using the following command, deploy the [citrix-k8s-cpx-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml) file:
 
-```
-kubectl apply -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
-```
+    kubectl apply -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml

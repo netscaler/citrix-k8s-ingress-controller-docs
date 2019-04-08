@@ -8,33 +8,33 @@ Ensure you have a Kubernetes Cluster up and running.
 
 If you are running your cluster in GKE, then ensure you have configured a cluster-admin cluster role binding. You can do that using the following command:
 
-`kubectl create clusterrolebinding citrix-cluster-admin --clusterrole=cluster-admin --user=<email-id of your google account>`
+    kubectl create clusterrolebinding citrix-cluster-admin --clusterrole=cluster-admin --user=<email-id of your google account>
 
 Get your Google account details using the following command:
 
-`gcloud info | grep Account`
+    gcloud info | grep Account
 
 **To deploy Citrix CPX as an Ingress:**
 
 1.  Create a sample application and expose it as service. In our example, let's use an apache web-server.
 
-    `kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/apache.yaml`
+        kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/apache.yaml
 
 1.  Create a Citrix CPX
 
-    `kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/standalone_cpx.yaml`
+        kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/standalone_cpx.yaml
 
 1.  Create an ingress object
 
-    `kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx_ingress.yaml`
+        kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx_ingress.yaml
 
 1.  Expose the Citrix CPX as a service of type Load-balancer. It creates an Azure LB with an External IP for receiving traffic. This is supported in kubernetes since v1.10.0.
 
-    `kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx_service.yaml`
+        kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx_service.yaml
 
 1.  After executing the command, wait for the load-balancer to create an external IP. View the deployed services using the following command:
 
-    **kubectl get svc**
+        kubectl get svc
 
     |NAME | TYPE | CLUSTER-IP | EXTERNAL-IP | PORT(S) | AGE |
     | --- | ---| ----| ----| ----| ----|
@@ -44,7 +44,7 @@ Get your Google account details using the following command:
 
 1.  Once the IP is available, you can access your resources through the External IP provided by the load-balancer.
 
-    **kubectl get svc**
+        kubectl get svc
 
     |Name | Type | Cluster-IP | External IP| Port(s) | Age |
     |-----| -----| -------| -----| -----| ----|
@@ -58,11 +58,10 @@ Get your Google account details using the following command:
 
     After the External-IP is created in the service, you can do a curl to the external IP using the host header **citrix-ingress.com**
 
-    `curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'`
+        curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 
-    > Note
-    >
-    > For ease of deployment, the following deployment models are explained with an all-in-one manifest file that combines all the explained steps. You can modify the manifest to suit your application and configuration.
+    !!! note "Note"
+        For ease of deployment, the following deployment models are explained with an all-in-one manifest file that combines all the explained steps. You can modify the manifest to suit your application and configuration.
 
 ## Deployment models
 
@@ -78,52 +77,52 @@ The following are the deployment solutions for deploying CPX as an ingress devic
 
 To deploy Citrix CPX as an Ingress in a standalone deployment model in GCP, you must use the Service Type as ***LoadBalancer*** that would create a Load-balancer in Google cloud. This is supported in kubernetes since v1.10.0.
 
-![CPX-GCP-Topology-Standalone](../Images/CPX-GCP-Topology-Standalone.png)
+![CPX-GCP-Topology-Standalone](../media/CPX-GCP-Topology-Standalone.png)
 
 1.  Execute the following command to create a Citrix CPX ingress with Citrix Ingress Controller as a sidecar in your Kubernetes cluster:
 
-    `kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one.yaml`
+        kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one.yaml
 
 1.  To access the application:
 
-    `curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'`
+        curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 
 To delete the deployment, use the following command:
 
-`kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one.yaml`
+    kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one.yaml
 
 ### High availability Citrix CPX deployment
 
 In the standalone deployment of Citrix ADC CPX as ingress, if the ingress device fails for some reason there would be a traffic outage for a few seconds. To avoid this disruption, instead of deploying a single CPX ingress, you can deploy two CPX ingress devices. So that if one CPX fails, the other CPX is available to handle traffic until the failed CPX comes up.
 
-![CPX-GCP-HA-Solution-Topology](../Images/CPX-GCP-HA-Solution-Topology.png)
+![CPX-GCP-HA-Solution-Topology](../media/CPX-GCP-HA-Solution-Topology.png)
 
 1.  Execute the following command to create a CPX ingress with Citrix Ingress Controller as a sidecar in your kubernetes cluster:
 
-    `kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-ha.yaml`
+        kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-ha.yaml
 
 1.  To access the application:
 
-    `curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'`
+        curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 
 To delete the deployment, use the following command:
 
-`kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-ha.yaml`
+    kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-ha.yaml
 
 ### Citrix CPX per node deployment
 
 Sometimes where cluster nodes are added and removed from the cluster, CPX can also be deployed as daemonsets so that every node has a CPX ingress in them. This is much more reliable solution than deploying two CPX as ingress devices when the traffic is high.
 
-![CPX-GCP-Daemonset-Topology](../Images/CPX-GCP-Daemonset-Topology.png)
+![CPX-GCP-Daemonset-Topology](../media/CPX-GCP-Daemonset-Topology.png)
 
 1.  Execute the following command to create a CPX ingress with in built Citrix Ingress Controller in your kubernetes cluster:
 
-    `kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-reliable.yaml`
+        kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-reliable.yaml
 
 1.  To access the application:
 
-    `curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'`
+        curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
 
 To delete the deployment, use the following command:
 
-`kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-reliable.yaml`
+    kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-reliable.yaml

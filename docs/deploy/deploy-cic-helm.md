@@ -2,9 +2,9 @@
 
 You can deploy Citrix Ingress Controller (CIC) in the following modes:
 
--  As a standalone pod in the Kubernetes cluster. Use this mode if you are controlling Citrix ADCs (Citrix ADC MPX or Citrix ADC VPX) outside the cluster. For example, with [dual-tier](/Docs/overview.md#dual-tier-topology) topologies, or [single-tier](/Docs/overview.md#single-tier-topology) topology where the single tier is a Citrix ADC MPX or VPX. [FIXME: links to topology]
+-  As a standalone pod in the Kubernetes cluster. Use this mode if you are controlling Citrix ADCs (Citrix ADC MPX or Citrix ADC VPX) outside the cluster. For example, with [dual-tier](../deployment-topologies.md#dual-tier-topology) topologies, or [single-tier](../deployment-topologies.md#single-tier-topology) topology where the single tier is a Citrix ADC MPX or VPX. 
 
--  As a sidecar (in the same pod) with Citrix ADC CPX in the Kubernetes cluster. The sidecar controller is only responsible for the associated Citrix ADC CPX within the same pod. This mode is used in [dual-tier](/Docs/overview.md#dual-tier-topology) or [cloud](/Docs/overview.md#cloud-topology)) topologies. [FIXME: links to topologies]
+-  As a sidecar (in the same pod) with Citrix ADC CPX in the Kubernetes cluster. The sidecar controller is only responsible for the associated Citrix ADC CPX within the same pod. This mode is used in [dual-tier](../deployment-topologies.md#dual-tier-topology) or [cloud](../deployment-topologies.md#cloud-topology)) topologies.
 
 The CIC [repo](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts) contains the [Helm](https://helm.sh/) charts of CIC that you can use to configure Citrix ADCs such as, VPX, MPX, or CPX in Kubernetes environment. The repo contains a directory called [stable](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable) that includes stable version of the charts that are created and tested by Citrix.
 
@@ -14,7 +14,7 @@ Use the [citrix-k8s-ingress-controller](https://github.com/citrix/citrix-k8s-ing
 
 ### Prerequisites
 
--  Determine the NS_IP IP address needed by the controller to communicate with the appliance. The IP address might be anyone of the following depending on the type of Citrix ADC deployment: [FIXME: this appears to imply that ALL 3 addresses are required all the time (***FIXED***)]
+-  Determine the NS_IP IP address needed by the controller to communicate with the appliance. The IP address might be anyone of the following depending on the type of Citrix ADC deployment:
 
     -  (Standalone appliances) NSIP - The management IP address of a standalone Citrix ADC appliance. For more information, see [IP Addressing in Citrix ADC](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing.html).
 
@@ -26,9 +26,7 @@ Use the [citrix-k8s-ingress-controller](https://github.com/citrix/citrix-k8s-ing
 
     You can directly pass the username and password or use Kubernetes secrets. If you want to use Kubernetes secrets, create a secrete for the username and password using the following command:
 
-    ```
-    kubectl create secret  generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
-    ```
+        kubectl create secret  generic nslogin --from-literal=username='cic' --from-literal=password='mypassword'
 
 #### Create System User Account for CIC in Citrix ADC
 
@@ -45,10 +43,6 @@ Citrix Ingress Controller (CIC) configures the Citrix ADC using a system user ac
 -  Configure Virtual IP address (VIP)
 -  Check the status of the Citrix ADC appliance
 
->**Note:**
->
->The system user account would have privileges based on the command policy that you define.
-
 To create the system user account, do the following:
 
 1.  Log on to the Citrix ADC appliance. Perform the following:
@@ -58,27 +52,22 @@ To create the system user account, do the following:
 
 1.  Create the system user account using the following command:
 
-    ```
-    add system user <username> <password>
-    ```
+        add system user <username> <password>
 
     For example:
 
-    ```
-    add system user cic mypassword
-    ```
+        add system user cic mypassword
 
 1.  Create a policy to provide required permissions to the system user account. Use the following command:
 
-    ```
-    add cmdpolicy cic-policy ALLOW "(^\S+\s+cs\s+\S+)|(^\S+\s+lb\s+\S+)|(^\S+\s+service\s+\S+)|(^\S+\s+servicegroup\s+\S+)|(^stat\s+system)|(^show\s+ha)|(^\S+\s+ssl\s+certKey)|(^\S+\s+ssl)|(^\S+\s+route)|(^\S+\s+monitor)|(^show\s+ns\s+ip)|(^\S+\s+system\s+file)"
-    ```
+        add cmdpolicy cic-policy ALLOW "(^\S+\s+cs\s+\S+)|(^\S+\s+lb\s+\S+)|(^\S+\s+service\s+\S+)|(^\S+\s+servicegroup\s+\S+)|(^stat\s+system)|(^show\s+ha)|(^\S+\s+ssl\s+certKey)|(^\S+\s+ssl)|(^\S+\s+route)|(^\S+\s+monitor)|(^show\s+ns\s+ip)|(^\S+\s+system\s+file)"
+
+    !!! note "Note"
+        The system user account would have privileges based on the command policy that you define.
 
 1.  Bind the policy to the system user account using the following command:
 
-    ```
-    bind system user cic cic-policy 0
-    ```
+        bind system user cic cic-policy 0
 
 **To deploy the [citrix-k8s-ingress-controller](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable/citrix-k8s-ingress-controller) chart, perform the following:**
 
@@ -86,19 +75,15 @@ Use the `helm install` command to install the [citrix-k8s-ingress-controller](ht
 
 For example:
 
-```
-helm install citrix-k8s-ingress-controller -set nsIP= <NSIP>,license.accept=yes,ingressClass=<ingressClassName>
-```
+    helm install citrix-k8s-ingress-controller -set nsIP= <NSIP>,license.accept=yes,ingressClass=<ingressClassName>
 
-> **Important:**
->
->By default the chart installs the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and role bindings.
+!!! note "Note"
+    By default the chart installs the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and role bindings.
 
 To configure the CIC as required, while installing the chart you need to pass CIC specific parameters in the `helm install`. The following table lists the mandatory and optional parameters that you can use:
 
-> **Note:**
->
->You can also use the [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/charts/stable/citrix-k8s-ingress-controller/values.yaml) to pass the parameters.
+!!! note "Note"
+    You can also use the [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/charts/stable/citrix-k8s-ingress-controller/values.yaml) to pass the parameters.
 
 | Parameters | Mandatory or Optional | Default value | Description |
 | --------- | --------------------- | ------------- | ----------- |
@@ -109,7 +94,7 @@ To configure the CIC as required, while installing the chart you need to pass CI
 | image.pullPolicy | Mandatory | Always | The CIC image pull policy. |
 | nsPort | Optional | 443 | The port used by CIC to communicate with Citrix ADC. You can port 80 for HTTP. |
 | nsProtocol | Optional | HTTPS | The protocol used by CIC to communicate with Citrix ADC. You can also use HTTP on port 80. |
-| logLevel | Optional | DEPUG | The loglevel to control the logs generated by CIC. The supported loglevels are: CRITICAL, ERROR, WARNING, INFO, and DEBUG. For more information, see [Logging](/Docs/Logging.md).|
+| logLevel | Optional | DEPUG | The loglevel to control the logs generated by CIC. The supported loglevels are: CRITICAL, ERROR, WARNING, INFO, and DEBUG. For more information, see [Logging](../configure/logging.md).|
 | kubernetesURL | Optional | N/A | The kube-apiserver url that CIC uses to register the events. If the value is not specified, CIC uses the [internal kube-apiserver IP address](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#accessing-the-api-from-a-pod). |
 | ingressClass | Optional | N/A | If multiple ingress load balancers are used to load balance different ingress resources. You can use this parameter to specify CIC to configure Citrix ADC associated with specific ingress class. |
 | name | Optional | N/A | Use the argument to specify the release name using which you want to install the chart. |
@@ -123,15 +108,13 @@ Use the [citrix-k8s-cpx-ingress-controller](https://github.com/citrix/citrix-k8s
 
 Use the `helm install` command to install the [citrix-k8s-cpx-ingress-controller](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable/citrix-k8s-cpx-ingress-controller) chart.
 
-> **Note:**
->
->By default the chart installs the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and role bindings.
+!!! note
+    By default the chart installs the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and role bindings.
 
 To configure the CIC as required, while installing the chart you need to pass CIC specific parameters in the `helm install`. The following table lists the mandatory and optional parameters that you can use:
 
-> **Tip:**
->
->You can also use the [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/charts/stable/citrix-k8s-cpx-ingress-controller/values.yaml)
+!!! tip
+    You can also use the [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/charts/stable/citrix-k8s-cpx-ingress-controller/values.yaml).
 
 | Parameters | Mandatory or Optional | Default value | Description |
 | ---------- | --------------------- | ------------- | ----------- |

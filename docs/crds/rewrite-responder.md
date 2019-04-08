@@ -12,9 +12,8 @@ Once you deploy the Rewrite and Responder CRD in the Kubernetes cluster. You can
 
 The Citrix Rewrite and Responder CRD deployment YAML file (`rewrite-responder-policies-deployment.yaml`) is available at: ***<\location-placeholder>***.
 
->**Note:**
->
->Ensure that you do not modify the deployment YAML file.
+!!! note "Note"
+    Ensure that you do not modify the deployment YAML file.
 
 Deploy the CRD, using the following command:
 
@@ -107,7 +106,7 @@ After you have deployed the CRD provided by Citrix in the Kubernetes cluster, yo
 
 In these sections, you need to use the [CRD attributes](#crd-attributes) provided for respective policy configuration (rewrite or responder) to define the policy.
 
-Also, in the `spec` you need to include a `rewrite-policies` section to specify the service or services to which the policy needs to be applied. For more information, see [Examples](#examples).
+Also, in the `spec` you need to include a `rewrite-policies` section to specify the service or services to which the policy needs to be applied. For more information, see [Sample policy configurations](#sample-policy-configurations).
 
 After you deploy the `.yaml` file, the Citrix Ingress Controller (CIC) applies the policy configuration on the Ingress Citrix ADC device.
 
@@ -144,21 +143,17 @@ spec:
 
 After you have defined the policy configuration, deploy the `.yaml` file using the following command:
 
-```
-root@master:demo#kubectl create -f target-url-rewrite.yaml
-```
+    root@master:demo#kubectl create -f target-url-rewrite.yaml
 
-After you deploy the `.yaml` file, the Citrix Ingress Controller (CIC) applies the policy configuration on the Ingress Citrix ADC device. 
+After you deploy the `.yaml` file, the Citrix Ingress Controller (CIC) applies the policy configuration on the Ingress Citrix ADC device.
 
 On the master node in the Kubernetes cluster, you can verify if the rewrite policy CRD is created on the CIC using the following command:
 
-```
-root@master:~# kubectl logs citrixingresscontroller | grep -i 'SUCCESS\|FAILURE\|exception'
-```
+    root@master:~# kubectl logs citrixingresscontroller | grep -i 'SUCCESS\|FAILURE\|exception'
 
 You can view an entry in the logs as shown in the following image:
 
-![CIC confirmation](/Images/rewrite-responder-cic-confirm.png)
+![CIC confirmation](../media/rewrite-responder-cic-confirm.png)
 
 Also, you can verify if the configuration is applied on the Citrix ADC, do the following:
 
@@ -166,12 +161,10 @@ Also, you can verify if the configuration is applied on the Citrix ADC, do the f
 
 1.  Use the following command to verify if the configuration is applied to the Citrix ADC:
 
-    ```
-    > show run | grep `lb vserver`
-    add lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http HTTP 0.0.0.0 0 -persistenceType NONE -lbMethod ROUNDROBIN -cltTimeout 180 -coment "uid=67d18ffb-261e-11e9-aad9-8e30e16c8143.ver=1692325"
-    bind lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http k8s-citrix.default.80.k8s-citrix-svc.default.http
-    bind lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http k8s-citrix.default.80.k8s-citrix-svc.default.http -policyname k8s_rwpolicy_crd_targeturlrewrite_0_default_1719072 -priority 1006 -gotoPriorityExpression END -type REQUEST
-    ```
+        $ show run | grep `lb vserver`
+        add lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http HTTP 0.0.0.0 0 -persistenceType NONE -lbMethod ROUNDROBIN -cltTimeout 180 -coment "uid=67d18ffb-261e-11e9-aad9-8e30e16c8143.ver=1692325"
+        bind lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http k8s-citrix.default.80.k8s-citrix-svc.default.http
+        bind lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http k8s-citrix.default.80.k8s-citrix-svc.default.http -policyname k8s_rwpolicy_crd_targeturlrewrite_0_default_1719072 -priority 1006 -gotoPriorityExpression END -type REQUEST
 
     You can verify that the policy `k8s_rwpolicy_crd_targeturlrewrite_0_default_1719072` is bound to the load balancing virtual server.
 

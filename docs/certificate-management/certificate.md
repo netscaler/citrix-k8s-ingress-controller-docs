@@ -4,7 +4,7 @@ Citrix Ingress Controller (CIC) supports automatic provisioning and renewal of T
 
 As shown in the following diagram, `cert-manager` interacts with the external Certificate Authorities (CA) to sign the certificates and converts it to Kubernetes secrets. These secrets are used by CIC to configure SSL virtual server on the Citrix ADC.
 
-![Certificate Management](../Images/cert-management.png)
+![Certificate Management](../media/cert-management.png)
 
 For detailed configurations, refer:
 

@@ -12,9 +12,8 @@ A non-FIPS Citrix ADC appliance stores the server’s private key on the hard di
 
 All Citrix ADC instances that do not support a FIPS card (including virtual appliances) support the Thales nShield® Connect and SafeNet external HSMs. (MPX 9700/10500/12500/15500 appliances do not support an external HSM.)
 
-> Note
->
-> FIPS-related options for some of the TLS configuration procedures described in this topic are specific to a FIPS-enabled Citrix ADC appliance.
+!!! note "Note"
+    FIPS-related options for some of the TLS configuration procedures described in this topic are specific to a FIPS-enabled Citrix ADC appliance.
 
 ## TLS Offload
 
@@ -175,9 +174,8 @@ false
 imagePullPolicy: Always
 ```
 
-> Note
->
-> You must provide a default secret name in the yaml.
+!!! note "Note"
+    You must provide a default secret name in the yaml.
 
 ## Setting up HTTP(S) Load Balancing with Ingress
 

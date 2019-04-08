@@ -2,7 +2,7 @@
 
 This topic provides a sample workflow that uses HashiCorp Vault as self-signed CA to automate TLS certificate provisioning, revocation, and renewal for ingress resources deployed with Citrix ingress controller using cert-manager.
 
-Specifically, the workflow uses the Vault PKI Secrets Engine to create a CA. This tutorial assumes that you have a Vault server installed and reachable from the Kubernetes cluster. The PKI secrets engine of Vault is suitable for internal applications and for external facing applications that require public trust, you can refer [automating TLS certificates using letsencrypt CA](./ACME.md)
+Specifically, the workflow uses the Vault PKI Secrets Engine to create a CA. This tutorial assumes that you have a Vault server installed and reachable from the Kubernetes cluster. The PKI secrets engine of Vault is suitable for internal applications and for external facing applications that require public trust, you can refer [automating TLS certificates using letsencrypt CA](./acme.md)
 
 The workflow uses a Vault secret engine and authentication methods, refer the following Vault documentation for full list of features:
 
@@ -30,7 +30,7 @@ Ensure that you have:
   
     Similarly in the Tier 2 deployment model, a TCP service is configured on the Citrix ADC (VPX/MPX) running outside the Kubernetes cluster to forward the traffic to Citrix ADC CPX instances running in the Kubernetes cluster. Citrix ADC CPX ends the SSL session and load-balances the traffic to actual service pods.
 
--  Deployed Citrix ingress controller. Click [here](../deployment/README.md) for various deployment scenarios.
+-  Deployed Citrix ingress controller. Click [here](../deployment-topologies.md) for various deployment scenarios.
 
 -  Administrator permissions for all the deployment steps. If you encounter failures due to permissions, make sure you have administrator permission.
 
@@ -85,9 +85,8 @@ cronjob.batch/cert-manager-webhook-ca-sync   @weekly    False     0        3d8h 
 
 Perform the following steps to deploy a sample web application.
 
-> Note:
->
-> [Kuard](https://github.com/kubernetes-up-and-running/kuard), a kubernetes demo application is used for reference in this topic.
+!!! note "Note"
+    [Kuard](https://github.com/kubernetes-up-and-running/kuard), a kubernetes demo application is used for reference in this topic.
 
 1.  Create a deployment YAML file (`kuard-deployment.yaml`) for Kuard with the following configuration.
 
@@ -149,9 +148,8 @@ Perform the following steps to deploy a sample web application.
     ```
 
 5.  Expose this service to outside world by creating an Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server.
-    >**Note:**
-    >
-    > Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which CIC is started.
+    !!! note "Note"
+        Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which CIC is started.
 
     ```YAML
     apiVersion: extensions/v1beta1
@@ -240,9 +238,8 @@ Ensure that you have installed the `jq` utility.
 
 For the sample workflow you can generate your own Root Certificate Authority within the Vault. In a production environment, you should use an external Root CA to sign the intermediate CA that Vault uses to generate certificates. If you have a root CA generated elsewhere, skip this step. 
 
->**Note:**
->
-> `PKI_ROOT` is a path where you mount the root CA, typically it is 'pki'. ${DOMAIN} in this procedure is `example.com`
+!!! note "Note"
+    `PKI_ROOT` is a path where you mount the root CA, typically it is 'pki'. ${DOMAIN} in this procedure is `example.com`
 
 ```
 % vault secrets enable -path="${PKI_ROOT}" pki
@@ -414,9 +411,8 @@ Perform the following to create a secret with Approle secret id.
       secretId: "NmExNzRjMjAtZjZkZS1hNTNjLTc0ZDItNjAxOGZjY2VmZjY0Cg=="
     ````
 
-    >**Note:**
-    >
-    >`data.secretId` is the base64 encoded Secret Id generated in [Generate the Role id and Secret id](#generate-the-role-id-and-secret-id). If you're using an Issuer resource in the next step, Secret must be in same namespace as the `Issuer`. For `ClusterIssuer`, secret must be in `cert-manager` namespace.
+    !!! note "Note"
+        `data.secretId` is the base64 encoded Secret Id generated in [Generate the Role id and Secret id](#generate-the-role-id-and-secret-id). If you're using an Issuer resource in the next step, Secret must be in same namespace as the `Issuer`. For `ClusterIssuer`, secret must be in `cert-manager` namespace.
 
 2.  Deploy the secret file (`secretid.yaml`) using the following command.
 
@@ -661,17 +657,5 @@ Done
 
 The HTTPS webserver is UP with the vault signed certificate. Cert-manager automatically renews the certificate as specified in the 'RenewBefore" parameter in the Certificate, before expiry of the certificate.
 
->**Note:**
->
->The vault signing of the certificate fails if the expiry of a certificate is beyond the expiry of the root CA or intermediate CA. You should ensure that the CA certificates are renewed in advance before the expiry.
-
-
-
-
- 
-
-
-
- 
-
-
+!!! note "Note"
+    The vault signing of the certificate fails if the expiry of a certificate is beyond the expiry of the root CA or intermediate CA. You should ensure that the CA certificates are renewed in advance before the expiry.

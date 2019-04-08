@@ -10,7 +10,7 @@ For licensing the Citrix ADC CPX, you need to provide the following information 
 
 The following is a sample yaml file:
 
-```YAML
+```yml
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:

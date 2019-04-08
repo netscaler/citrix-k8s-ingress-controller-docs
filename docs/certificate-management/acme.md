@@ -28,7 +28,7 @@ Ensure that you have:
   
     Similarly in Tier 2 deployment model, a TCP service is configured on the Citrix ADC (VPX/MPX) running outside the Kubernetes cluster to forward the traffic to Citrix ADC CPX instances running in kubernetes cluster.  Citrix ADC CPX ends the SSL session and load-balances the traffic to actual service pods.
 
--  Deployed Citrix ingress controller. Click [here](../deployment/README.md) for various deployment scenarios.
+-  Deployed Citrix ingress controller. Click [here](../deployment-topologies.md) for various deployment scenarios.
 
 -  Opened Port 80 for the Virtual IP address on the firewall for the Let's Encrypt CA to validate the domain for HTTP01 challenge.
 
@@ -85,9 +85,8 @@ cronjob.batch/cert-manager-webhook-ca-sync   @weekly    False     0        3d8h 
 
 Perform the following to deploy a sample web application:
 
-> Note:
->
-> [Kuard](https://github.com/kubernetes-up-and-running/kuard), a kubernetes demo application is used for reference in this topic.
+!!! note "Note"
+    [Kuard](https://github.com/kubernetes-up-and-running/kuard), a kubernetes demo application is used for reference in this topic.
 
 1.  Create a deployment YAML file (`kuard-deployment.yaml`) for Kuard with the following configuration:
 
@@ -149,9 +148,8 @@ Perform the following to deploy a sample web application:
     ```
 
 5.  Expose this service to outside world by creating and Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server. 
-    >**Note:**
-    >
-    > Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which CIC is started.
+    !!! note "Note"
+        Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which CIC is started.
 
     ```YAML
     apiVersion: extensions/v1beta1
@@ -260,11 +258,10 @@ For CIC to use ingress from any namespace, use `ClusterIssuer`. Alternatively yo
         http01: {}
     ```
 
-    >**Note:**
-    >
-    > http01 challenge provider is enabled in the `ClusterIssuer` CRD. Replace `user@example.com` with your email address. This is the email address that Let's Encrypt uses to communicate with you about certificates you request. For more information, see [Issuer reference docs](https://docs.cert-manager.io/en/latest/reference/issuers.html).
-    >
-    >The staging Let's Encrypt server issues fake certificate, but it is not bound by [the API rate limits of the production server](https://letsencrypt.org/docs/rate-limits/). This approach lets you set up and test your environment without worrying about rate limits. You can repeat the same step for Let's Encrypt Production server.
+    !!! note "Note"
+        http01 challenge provider is enabled in the `ClusterIssuer` CRD. Replace `user@example.com` with your email address. This is the email address that Let's Encrypt uses to communicate with you about certificates you request. For more information, see [Issuer reference docs](https://docs.cert-manager.io/en/latest/reference/issuers.html).
+
+        The staging Let's Encrypt server issues fake certificate, but it is not bound by [the API rate limits of the production server](https://letsencrypt.org/docs/rate-limits/). This approach lets you set up and test your environment without worrying about rate limits. You can repeat the same step for Let's Encrypt Production server.
 
 2.  After you edit and save the file, deploy the file using the following command:
 
@@ -283,7 +280,7 @@ For CIC to use ingress from any namespace, use `ClusterIssuer`. Alternatively yo
 
 4.  Verify if the `ClusterIssuer` is properly registered using the command `kubectl describe issuer letsencrypt-staging`:
 
-    ```
+    ```bash
     Status:
       Acme:
         Uri:  https://acme-staging-v02.api.letsencrypt.org/acme/acct/8200869
@@ -316,9 +313,8 @@ In this approach, we'll add these two annotations to ingress object for which yo
     certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
 ```
 
->**Note:**
->
->You can find all supported annotations from cert-manager for ingress-shim, click [here](https://cert-manager.readthedocs.io/en/latest/tasks/issuing-certificates/ingress-shim.html#supported-annotations).
+!!! note "Note"
+    You can find all supported annotations from cert-manager for ingress-shim, click [here](https://cert-manager.readthedocs.io/en/latest/tasks/issuing-certificates/ingress-shim.html#supported-annotations).
 
 Also, modify the `ingress.yaml` to use TLS by specifying a secret.
 
@@ -433,10 +429,10 @@ This section describes a way to use DNS validation to get ACME certificate from 
                 key: secret-access-key
     ```
 
-    >**Note**:
-    >
-    >Replace `user@example.com` with your email address.
-    >For each domain mentioned in a dns01 stanza, cert-manager will use the provider's credentials from the referenced Issuer to create a TXT record called _acme-challenge. This record will then be verified by the ACME server in order to issue the certificate. For more information about the DNS provider configuration, and the list of supported providers, see [dns01 reference doc](https://docs.cert-manager.io/en/latest/tasks/acme/configuring-dns01/).
+    !!! note "Note"
+        Replace `user@example.com` with your email address.
+
+        For each domain mentioned in a dns01 stanza, cert-manager will use the provider's credentials from the referenced Issuer to create a TXT record called _acme-challenge. This record will then be verified by the ACME server in order to issue the certificate. For more information about the DNS provider configuration, and the list of supported providers, see [dns01 reference doc](https://docs.cert-manager.io/en/latest/tasks/acme/configuring-dns01/).
 
 2.  After you edit and save the file, deploy the file using the following command:
 
@@ -646,7 +642,8 @@ spec:
     server: https://acme-v02.api.letsencrypt.org/directory
 ```
 
->**Note:** Replace `user@example.com` with your email address.
+!!! note "Note"
+    Replace `user@example.com` with your email address.
 
 Deploy the file using the following command:
 
@@ -657,8 +654,8 @@ clusterissuer "letsencrypt-prod" created
 
 Now repeat the procedure of modifying the annotation in ingress or creating a new CRD certificate which will trigger the generation of new certificate.
 
->**Note:**
->Ensure that you delete the old secret so that cert-manager starts a fresh challenge with the production CA.
+!!! note "Note"
+    Ensure that you delete the old secret so that cert-manager starts a fresh challenge with the production CA.
 
 ```
 % kubectl delete secret kuard-example-tls
