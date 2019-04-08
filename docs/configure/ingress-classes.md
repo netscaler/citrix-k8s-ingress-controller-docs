@@ -12,9 +12,8 @@ You can associate Ingress Controller with multiple ingress classes using `--ingr
 
 If ingress-classes are not specified for Ingress Controller, then it accepts all ingress resources irrespective of the presence of `kubernetes.io/ingress.class` annotation in the ingress object. If `ingress-classes` are specified, then Ingress Controller accepts only those ingress resources for which match the `kubernetes.io/ingress.class` annotation. Ingress resource without `ingress.class` annotation is not handled by Ingress Controller in the given case.
 
-> **Note:**
->
->Ingress class names are case-insensitive.
+!!! note "Note"
+    Ingress class names are case-insensitive.
 
 ## Sample yaml configurations with ingress-classes
 
@@ -24,25 +23,25 @@ Following is the snippet from a sample yaml file to associate `ingress-classes` 
 
 -  Citrix
 
-   ```YAML
-   spec:
-      serviceAccountName: cic-k8s-role
-      containers:
-      - name: cic-k8s-ingress-controller
-        image: "quay.io/citrix/citrix-k8s-ingress-controller:latest"
-        # specify the ingress classes names to be supported by Ingress Controller in args section.
-        # First line should be --ingress-classes, and every subsequent line should be
-        # the name of allowed ingress class. In the given example two classes named
-        # "citrix" and "my-custom-class" are accepted. This will be case-insensitive.
-        args:
-          - --ingress-classes
-            Citrix
-            my-custom-class
-   ```
-
-Following is the snippet of Ingress yaml file where Ingress class association is depicted. In the given example, Ingress resource named `web-ingress` is associated with the ingress class `my-custom-class`. If Citrix Ingress Controller is configured to accept `my-custom-class`, it processes this Ingress resource.
-
+```YAML
+spec:
+    serviceAccountName: cic-k8s-role
+    containers:
+    - name: cic-k8s-ingress-controller
+      image:"quayio/citrix/citrix-k8s-ingress-controller:latest"
+      # specify the ingress classes names to be supportedbyIngress Controller in args section.
+      # First line should be --ingress-classes, andeverysubsequent line should be
+      # the name of allowed ingress class. In the givenexampletwo classes named
+      # "citrix" and "my-custom-class" are accepted. Thiswill be case-insensitive.
+      args:
+        - --ingress-classes
+          Citrix
+          my-custom-class
 ```
+
+Following is the snippet from an Ingress yaml file where Ingress class association is depicted. In the given example, Ingress resource named `web-ingress` is associated with the ingress class `my-custom-class`. If Citrix Ingress Controller is configured to accept `my-custom-class`, it processes this Ingress resource.
+
+```yml
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
