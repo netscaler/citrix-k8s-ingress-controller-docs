@@ -39,47 +39,42 @@ Ensure that you have:
 Perform the following steps to deploy cert-manager using the supplied YAML manifest file.
 To keep things simple, skip cert-manager's Helm installation, and instead use the supplied YAML manifests.
 
-1. Download the latest source of cert-manager from  `github.com/jetstack/cert-manager` repository using the following command.
+1.  Download the latest source of cert-manager from  `github.com/jetstack/cert-manager` repository using the following command.
 
-```
-wget https://github.com/jetstack/cert-manager/archive/v0.6.2.tar.gz
-tar -zxvf v0.6.2.tar.gz
-```
+        wget https://github.com/jetstack/cert-manager/archive/v0.6.2.tar.gz
+        tar -zxvf v0.6.2.tar.gz
 
- 2. Deploy the cert-manager using the following command.
+1.  Deploy the cert-manager using the following command.
 
-```
-kubectl apply -f deploy/manifests/cert-manager.yaml
-```
- You can also install the cert-manager with Helm, for more information see [cert-manager documentation](https://github.com/helm/charts/tree/master/stable/cert-manager)
+        kubectl apply -f deploy/manifests/cert-manager.yaml
 
-3. Verify that the cert-manager is up and running using the following command.
+    You can also install the cert-manager with Helm, for more information see [cert-manager documentation](https://github.com/helm/charts/tree/master/stable/cert-manager)
 
-```
-% kubectl -n cert-manager get all
-NAME                                       READY   STATUS    RESTARTS   AGE
-pod/cert-manager-77fd74fb64-d68v7          1/1     Running   0          4m41s
-pod/cert-manager-webhook-67bf86d45-k77jj   1/1     Running   0          4m41s
+1.  Verify that the cert-manager is up and running using the following command.
 
-NAME                           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
-service/cert-manager-webhook   ClusterIP   10.108.161.154   <none>        443/TCP   13d
+        % kubectl -n cert-manager get all
+        NAME                                       READY   STATUS    RESTARTS   AGE
+        pod/cert-manager-77fd74fb64-d68v7          1/1     Running   0          4m41s
+        pod/cert-manager-webhook-67bf86d45-k77jj   1/1     Running   0          4m41s
 
-NAME                                   READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/cert-manager           1/1     1            1           13d
-deployment.apps/cert-manager-webhook   1/1     1            1           13d
+        NAME                           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+        service/cert-manager-webhook   ClusterIP   10.108.161.154   <none>        443/TCP   13d
 
-NAME                                             DESIRED   CURRENT   READY   AGE
-replicaset.apps/cert-manager-77fd74fb64          1         1         1       13d
-replicaset.apps/cert-manager-webhook-67bf86d45   1         1         1       13d
+        NAME                                   READY   UP-TO-DATE   AVAILABLE   AGE
+        deployment.apps/cert-manager           1/1     1            1           13d
+        deployment.apps/cert-manager-webhook   1/1     1            1           13d
 
-NAME                                                COMPLETIONS   DURATION   AGE
-job.batch/cert-manager-webhook-ca-sync              1/1           22s        13d
-job.batch/cert-manager-webhook-ca-sync-1549756800   1/1           21s        10d
-job.batch/cert-manager-webhook-ca-sync-1550361600   1/1           19s        3d8h
+        NAME                                             DESIRED   CURRENT   READY   AGE
+        replicaset.apps/cert-manager-77fd74fb64          1         1         1       13d
+        replicaset.apps/cert-manager-webhook-67bf86d45   1         1         1       13d
 
-NAME                                         SCHEDULE   SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-cronjob.batch/cert-manager-webhook-ca-sync   @weekly    False     0        3d8h            13d
-```
+        NAME                                                COMPLETIONS   DURATION   AGE
+        job.batch/cert-manager-webhook-ca-sync              1/1           22s        13d
+        job.batch/cert-manager-webhook-ca-sync-1549756800   1/1           21s        10d
+        job.batch/cert-manager-webhook-ca-sync-1550361600   1/1           19s        3d8h
+
+        NAME                                         SCHEDULE   SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+        cronjob.batch/cert-manager-webhook-ca-sync   @weekly    False     0        3d8h            13d
 
 ## Deploy a sample web application
 
@@ -110,17 +105,15 @@ Perform the following steps to deploy a sample web application.
             - containerPort: 8080
     ```
 
-2.  Deploy Kuard deployment file (`kuard-deployment.yaml`) to your cluster, using the following commands.
+1.  Deploy Kuard deployment file (`kuard-deployment.yaml`) to your cluster, using the following commands.
 
-    ```
-    % kubectl create -f kuard-deployment.yaml
-    deployment.extensions/kuard created
-    % kubectl get pod -l app=kuard
-    NAME                     READY   STATUS    RESTARTS   AGE
-    kuard-6fc4d89bfb-djljt   1/1     Running   0          24s
-    ```
+        % kubectl create -f kuard-deployment.yaml
+        deployment.extensions/kuard created
+        % kubectl get pod -l app=kuard
+        NAME                     READY   STATUS    RESTARTS   AGE
+        kuard-6fc4d89bfb-djljt   1/1     Running   0          24s
 
-3.  Create a service for the deployment. Create a file called `service.yaml` with the following configuration.
+1.  Create a service for the deployment. Create a file called `service.yaml` with the following configuration.
 
     ```YAML
     apiVersion: v1
@@ -136,18 +129,17 @@ Perform the following steps to deploy a sample web application.
         app: kuard
     ```
 
-4.  Deploy and verify the service using the following command.
+1.  Deploy and verify the service using the following command.
 
-    ```
-    % kubectl create -f service.yaml
-    service/kuard created
-    % kubectl get svc kuard
-    NAME    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
-    kuard   ClusterIP   10.103.49.171   <none>        80/TCP    13s
+        % kubectl create -f service.yaml
+        service/kuard created
+        % kubectl get svc kuard
+        NAME    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+        kuard   ClusterIP   10.103.49.171   <none>        80/TCP    13s
 
-    ```
 
 5.  Expose this service to outside world by creating an Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server.
+
     !!! note "Note"
         Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which CIC is started.
 
@@ -168,63 +160,55 @@ Perform the following steps to deploy a sample web application.
               servicePort: 80
     ```
 
-    >**Important:**
-    >
-    >Change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Citrix ADC CPX or VPX.
+    !!! info "Important"
+        Change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Citrix ADC CPX or VPX.
 
-6.  Deploy the Ingress using the following command.
+1.  Deploy the Ingress using the following command.
 
-    ```
-    % kubectl apply -f ingress.yml
-    ingress.extensions/kuard created
-    root@ubuntu-vivek-225:~/cert-manager# kubectl get ingress
-    NAME    HOSTS               ADDRESS   PORTS   AGE
-    kuard   kuard.example.com             80      7s
-    ```
+        % kubectl apply -f ingress.yml
+        ingress.extensions/kuard created
+        root@ubuntu-vivek-225:~/cert-manager# kubectl get ingress
+        NAME    HOSTS               ADDRESS   PORTS   AGE
+        kuard   kuard.example.com             80      7s
 
-7.  Verify if the ingress is configured on Citrix ADC CPX or VPX using the following command.
+1.  Verify if the ingress is configured on Citrix ADC CPX or VPX using the following command.
 
-    ```
-    kubectl exec -it cpx-ingress-5b85d7c69d-ngd72 /bin/bash
-    root@cpx-ingress-5b85d7c69d-ngd72:/# cli_script.sh 'sh cs vs'
-    exec: sh cs vs
-    1)	k8s-10.244.1.50:80:http (10.244.1.50:80) - HTTP	Type: CONTENT
-      State: UP
-      Last state change was at Thu Feb 21 09:02:14 2019
-      Time since last state change: 0 days, 00:00:41.140
-      Client Idle Timeout: 180 sec
-      Down state flush: ENABLED
-      Disable Primary Vserver On Down : DISABLED
-      Comment: uid=75VBGFO7NZXV7SCI4LSDJML2Q5X6FSNK6NXQPWGMDOYGBW2IMOGQ====
-      Appflow logging: ENABLED
-      Port Rewrite : DISABLED
-      State Update: DISABLED
-      Default: 	Content Precedence: RULE
-      Vserver IP and Port insertion: OFF
-      L2Conn: OFF	Case Sensitivity: ON
-      Authentication: OFF
-      401 Based Authentication: OFF
-      Push: DISABLED	Push VServer:
-      Push Label Rule: none
-      Listen Policy: NONE
-      IcmpResponse: PASSIVE
-      RHIstate:  PASSIVE
-      Traffic Domain: 0
-    Done
-    root@cpx-ingress-5b85d7c69d-ngd72:/# exit
-    exit
-    ```
+        kubectl exec -it cpx-ingress-5b85d7c69d-ngd72 /bin/bash
+        root@cpx-ingress-5b85d7c69d-ngd72:/# cli_script.sh 'sh cs vs'
+        exec: sh cs vs
+        1)	k8s-10.244.1.50:80:http (10.244.1.50:80) - HTTP	Type: CONTENT
+          State: UP
+          Last state change was at Thu Feb 21 09:02:14 2019
+          Time since last state change: 0 days, 00:00:41.140
+          Client Idle Timeout: 180 sec
+          Down state flush: ENABLED
+          Disable Primary Vserver On Down : DISABLED
+          Comment: uid=75VBGFO7NZXV7SCI4LSDJML2Q5X6FSNK6NXQPWGMDOYGBW2IMOGQ====
+          Appflow logging: ENABLED
+          Port Rewrite : DISABLED
+          State Update: DISABLED
+          Default: 	Content Precedence: RULE
+          Vserver IP and Port insertion: OFF
+          L2Conn: OFF	Case Sensitivity: ON
+          Authentication: OFF
+          401 Based Authentication: OFF
+          Push: DISABLED	Push VServer:
+          Push Label Rule: none
+          Listen Policy: NONE
+          IcmpResponse: PASSIVE
+          RHIstate:  PASSIVE
+          Traffic Domain: 0
+        Done
+        root@cpx-ingress-5b85d7c69d-ngd72:/# exit
+        exit
 
-8.  Verify if the page is correctly being served when requested using the `curl` command.
+1.  Verify if the page is correctly being served when requested using the `curl` command.
 
-    ```
-    % curl -sS -D - kuard.example.com -o /dev/null
-    HTTP/1.1 200 OK
-    Content-Length: 1458
-    Content-Type: text/html
-    Date: Thu, 21 Feb 2019 09:09:05 GMT
-
-    ```
+        % curl -sS -D - kuard.example.com -o /dev/null
+        HTTP/1.1 200 OK
+        Content-Length: 1458
+        Content-Type: text/html
+        Date: Thu, 21 Feb 2019 09:09:05 GMT
 
 ## Configure Hashicorp Vault as Certificate Authority
 
@@ -266,29 +250,23 @@ After creating the root CA, perform the following steps to create an intermediat
 
 1.  Enable pki from a different path `PKI_INT` from root CA, typically `pki\_int`. Use the following command:
 
-    ```
-    % vault secrets enable -path=${PKI_INT} pki
-    Set the max TTL to 3 year
+        % vault secrets enable -path=${PKI_INT} pki
+        Set the max TTL to 3 year
 
-    % vault secrets tune -max-lease-ttl=26280h ${PKI_INT}
-    ```
+        % vault secrets tune -max-lease-ttl=26280h ${PKI_INT}
 
 2.  Generate CSR for `${DOMAIN}` that needs to be signed by the root CA, the key is stored internally to vault. Use the following command:
 
-    ```
-    % vault write -format=json "${PKI_INT}"/intermediate/generate/internal \
-    common_name="${DOMAIN} CA intermediate" ttl=43800h | tee \
-    >(jq -r .data.csr > pki_int.csr) \
-    >(jq -r .data.private_key > pki_int.pem)
-    ```
+        % vault write -format=json "${PKI_INT}"/intermediate/generate/internal \
+        common_name="${DOMAIN} CA intermediate" ttl=43800h | tee \
+        >(jq -r .data.csr > pki_int.csr) \
+        >(jq -r .data.private_key > pki_int.pem)
 
 3.  Generate and sign the `${DOMAIN}` certificate as an intermediate CA using root CA, store it as `intermediate.cert.pem`. Use the following command:
 
-    ```
-    % vault write -format=json "${PKI_ROOT}"/root/sign-intermediate csr=@pki_int.csr \
-            format=pem_bundle \
-            | jq -r '.data.certificate' > intermediate.cert.pem
-    ```
+        % vault write -format=json "${PKI_ROOT}"/root/sign-intermediate csr=@pki_int.csr \
+                format=pem_bundle \
+                | jq -r '.data.certificate' > intermediate.cert.pem
 
     If you are using an external root CA, skip the above step and sign the CSR manually using root CA.
 

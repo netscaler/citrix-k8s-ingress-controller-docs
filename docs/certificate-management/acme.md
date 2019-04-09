@@ -28,7 +28,7 @@ Ensure that you have:
   
     Similarly in Tier 2 deployment model, a TCP service is configured on the Citrix ADC (VPX/MPX) running outside the Kubernetes cluster to forward the traffic to Citrix ADC CPX instances running in kubernetes cluster.  Citrix ADC CPX ends the SSL session and load-balances the traffic to actual service pods.
 
--  Deployed Citrix ingress controller. Click [here](../deployment-topologies.md) for various deployment scenarios.
+-  Deployed Citrix ingress controller. Click [here](../deployment-topologies.mddeployment-topologies.html) for various deployment scenarios.
 
 -  Opened Port 80 for the Virtual IP address on the firewall for the Let's Encrypt CA to validate the domain for HTTP01 challenge.
 
@@ -40,46 +40,40 @@ Ensure that you have:
 
 To keep things simple, let's skip cert-manager's Helm installation, and instead use the supplied YAML manifests. Download the latest source of cert-manager from  `github.com/jetstack/cert-manager` repository using the following command:
 
-```
-wget https://github.com/jetstack/cert-manager/archive/v0.6.2.tar.gz
-tar -zxvf v0.6.2.tar.gz
-```
+    wget https://github.com/jetstack/cert-manager/archive/v0.6.2.tar.gz
+    tar -zxvf v0.6.2.tar.gz
 
 Then deploy the cert-manager using the following command:
 
-```
-kubectl apply -f deploy/manifests/cert-manager.yaml
-```
+    kubectl apply -f deploy/manifests/cert-manager.yaml
 
 Alternatively, you can also install the cert-manager with Helm, for more information see [cert-manager documentation](https://github.com/helm/charts/tree/master/stable/cert-manager)
 
 Verify in the cert-manager is up and running using the following command:
 
-```
-% kubectl -n cert-manager get all
-NAME                                       READY   STATUS    RESTARTS   AGE
-pod/cert-manager-77fd74fb64-d68v7          1/1     Running   0          4m41s
-pod/cert-manager-webhook-67bf86d45-k77jj   1/1     Running   0          4m41s
+    % kubectl -n cert-manager get all
+    NAME                                       READY   STATUS    RESTARTS   AGE
+    pod/cert-manager-77fd74fb64-d68v7          1/1     Running   0          4m41s
+    pod/cert-manager-webhook-67bf86d45-k77jj   1/1     Running   0          4m41s
 
-NAME                           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
-service/cert-manager-webhook   ClusterIP   10.108.161.154   <none>        443/TCP   13d
+    NAME                           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+    service/cert-manager-webhook   ClusterIP   10.108.161.154   <none>        443/TCP   13d
 
-NAME                                   READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/cert-manager           1/1     1            1           13d
-deployment.apps/cert-manager-webhook   1/1     1            1           13d
+    NAME                                   READY   UP-TO-DATE   AVAILABLE   AGE
+    deployment.apps/cert-manager           1/1     1            1           13d
+    deployment.apps/cert-manager-webhook   1/1     1            1           13d
 
-NAME                                             DESIRED   CURRENT   READY   AGE
-replicaset.apps/cert-manager-77fd74fb64          1         1         1       13d
-replicaset.apps/cert-manager-webhook-67bf86d45   1         1         1       13d
+    NAME                                             DESIRED   CURRENT   READY   AGE
+    replicaset.apps/cert-manager-77fd74fb64          1         1         1       13d
+    replicaset.apps/cert-manager-webhook-67bf86d45   1         1         1       13d
 
-NAME                                                COMPLETIONS   DURATION   AGE
-job.batch/cert-manager-webhook-ca-sync              1/1           22s        13d
-job.batch/cert-manager-webhook-ca-sync-1549756800   1/1           21s        10d
-job.batch/cert-manager-webhook-ca-sync-1550361600   1/1           19s        3d8h
+    NAME                                                COMPLETIONS   DURATION   AGE
+    job.batch/cert-manager-webhook-ca-sync              1/1           22s        13d
+    job.batch/cert-manager-webhook-ca-sync-1549756800   1/1           21s        10d
+    job.batch/cert-manager-webhook-ca-sync-1550361600   1/1           19s        3d8h
 
-NAME                                         SCHEDULE   SUSPEND   ACTIVE   LAST SCHEDULE   AGE
-cronjob.batch/cert-manager-webhook-ca-sync   @weekly    False     0        3d8h            13d
-```
+    NAME                                         SCHEDULE   SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+    cronjob.batch/cert-manager-webhook-ca-sync   @weekly    False     0        3d8h            13d
 
 ## Deploy a sample web application
 
@@ -90,64 +84,61 @@ Perform the following to deploy a sample web application:
 
 1.  Create a deployment YAML file (`kuard-deployment.yaml`) for Kuard with the following configuration:
 
-    ```YAML
-    apiVersion: extensions/v1beta1
-    kind: Deployment
-    metadata:
-      name: kuard
-    spec:
-      replicas: 1
-      template:
-        metadata:
-          labels:
-            app: kuard
-        spec:
-          containers:
-          - image: gcr.io/kuar-demo/kuard-amd64:1
-            imagePullPolicy: Always
-            name: kuard
-            ports:
-            - containerPort: 8080
-    ```
+      ```yml
+      apiVersion: extensions/v1beta1
+      kind: Deployment
+      metadata:
+        name: kuard
+      spec:
+        replicas: 1
+        template:
+          metadata:
+            labels:
+              app: kuard
+          spec:
+            containers:
+            - image: gcr.io/kuar-demo/kuard-amd64:1
+              imagePullPolicy: Always
+              name: kuard
+              ports:
+              - containerPort: 8080
+      ```
 
 2.  Deploy Kuard deployment file (`kuard-deployment.yaml`) to your cluster, using the following commands:
 
-    ```
-    % kubectl create -f kuard-deployment.yaml
-    deployment.extensions/kuard created
-    % kubectl get pod -l app=kuard
-    NAME                     READY   STATUS    RESTARTS   AGE
-    kuard-6fc4d89bfb-djljt   1/1     Running   0          24s
-    ```
+        % kubectl create -f kuard-deployment.yaml
+        deployment.extensions/kuard created
+        % kubectl get pod -l app=kuard
+        NAME                     READY   STATUS    RESTARTS   AGE
+        kuard-6fc4d89bfb-djljt   1/1     Running   0          24s
 
 3.  Create a service for the deployment. Create a file called `service.yaml` with the following configuration:
 
-    ```YAML
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: kuard
-    spec:
-      ports:
-      - port: 80
-        targetPort: 8080
-        protocol: TCP
-      selector:
-        app: kuard
-    ```
+      ```YAML
+      apiVersion: v1
+      kind: Service
+      metadata:
+       name: kuard
+      spec:
+        ports:
+        - port: 80
+          targetPort: 8080
+          protocol: TCP
+        selector:
+          app: kuard
+      ```
 
 4.  Deploy and verify the service using the following commands:
 
-    ```
-    % kubectl create -f service.yaml
-    service/kuard created
-    % kubectl get svc kuard
-    NAME    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
-    kuard   ClusterIP   10.103.49.171   <none>        80/TCP    13s
+        % kubectl create -f service.yaml
+        service/kuard created
+        % kubectl get svc kuard
+        NAME    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+        kuard   ClusterIP   10.103.49.171   <none>        80/TCP    13s
 
-    ```
 
-5.  Expose this service to outside world by creating and Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server. 
+5.  Expose this service to outside world by creating and Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server.
+
     !!! note "Note"
         Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which CIC is started.
 
@@ -168,63 +159,55 @@ Perform the following to deploy a sample web application:
               servicePort: 80
     ```
 
-    >**Important:**
-    >
-    >Change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Citrix ADC CPX or VPX.
+    !!! info "Important"
+        Change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Citrix ADC CPX or VPX.
 
 6.  Deploy the Ingress using the following command:
 
-    ```
-    % kubectl apply -f ingress.yml
-    ingress.extensions/kuard created
-    root@ubuntu-vivek-225:~/cert-manager# kubectl get ingress
-    NAME    HOSTS               ADDRESS   PORTS   AGE
-    kuard   kuard.example.com             80      7s
-    ```
+        % kubectl apply -f ingress.yml
+        ingress.extensions/kuard created
+        root@ubuntu-vivek-225:~/cert-manager# kubectl get ingress
+        NAME    HOSTS               ADDRESS   PORTS   AGE
+        kuard   kuard.example.com             80      7s
 
 7.  Verify if the ingress is configured on Citrix ADC CPX or VPX using the following command: 
 
-    ```
-    kubectl exec -it cpx-ingress-5b85d7c69d-ngd72 /bin/bash
-    root@cpx-ingress-5b85d7c69d-ngd72:/# cli_script.sh 'sh cs vs'
-    exec: sh cs vs
-    1)	k8s-10.244.1.50:80:http (10.244.1.50:80) - HTTP	Type: CONTENT
-      State: UP
-      Last state change was at Thu Feb 21 09:02:14 2019
-      Time since last state change: 0 days, 00:00:41.140
-      Client Idle Timeout: 180 sec
-      Down state flush: ENABLED
-      Disable Primary Vserver On Down : DISABLED
-      Comment: uid=75VBGFO7NZXV7SCI4LSDJML2Q5X6FSNK6NXQPWGMDOYGBW2IMOGQ====
-      Appflow logging: ENABLED
-      Port Rewrite : DISABLED
-      State Update: DISABLED
-      Default: 	Content Precedence: RULE
-      Vserver IP and Port insertion: OFF
-      L2Conn: OFF	Case Sensitivity: ON
-      Authentication: OFF
-      401 Based Authentication: OFF
-      Push: DISABLED	Push VServer:
-      Push Label Rule: none
-      Listen Policy: NONE
-      IcmpResponse: PASSIVE
-      RHIstate:  PASSIVE
-      Traffic Domain: 0
-    Done
-    root@cpx-ingress-5b85d7c69d-ngd72:/# exit
-    exit
-    ```
+        $ kubectl exec -it cpx-ingress-5b85d7c69d-ngd72 /bin/bash
+        root@cpx-ingress-5b85d7c69d-ngd72:/# cli_script.sh 'sh cs vs'
+        exec: sh cs vs
+        1)	k8s-10.244.1.50:80:http (10.244.1.50:80) - HTTP	Type: CONTENT
+          State: UP
+          Last state change was at Thu Feb 21 09:02:14 2019
+          Time since last state change: 0 days, 00:00:41.140
+          Client Idle Timeout: 180 sec
+          Down state flush: ENABLED
+          Disable Primary Vserver On Down : DISABLED
+          Comment: uid=75VBGFO7NZXV7SCI4LSDJML2Q5X6FSNK6NXQPWGMDOYGBW2IMOGQ====
+          Appflow logging: ENABLED
+          Port Rewrite : DISABLED
+          State Update: DISABLED
+          Default: 	Content Precedence: RULE
+          Vserver IP and Port insertion: OFF
+          L2Conn: OFF	Case Sensitivity: ON
+          Authentication: OFF
+          401 Based Authentication: OFF
+          Push: DISABLED	Push VServer:
+          Push Label Rule: none
+          Listen Policy: NONE
+          IcmpResponse: PASSIVE
+          RHIstate:  PASSIVE
+          Traffic Domain: 0
+        Done
+        root@cpx-ingress-5b85d7c69d-ngd72:/# exit
+        exit
 
 8.  Verify if the page is correctly being served when requested using the `curl` command.
 
-    ```
-    % curl -sS -D - kuard.example.com -o /dev/null
-    HTTP/1.1 200 OK
-    Content-Length: 1458
-    Content-Type: text/html
-    Date: Thu, 21 Feb 2019 09:09:05 GMT
-
-    ```
+        % curl -sS -D - kuard.example.com -o /dev/null
+        HTTP/1.1 200 OK
+        Content-Length: 1458
+        Content-Type: text/html
+        Date: Thu, 21 Feb 2019 09:09:05 GMT
 
 ## Configure issuing ACME certificate using HTTP challenge
 
@@ -238,7 +221,7 @@ The cert-manager supports two different CRDs for configuration, an `Issuer`, whi
 
 For CIC to use ingress from any namespace, use `ClusterIssuer`. Alternatively you can create an `Issuer` for each namespace on which you are creating an Ingress resource.
 
-1.  Create a file called `issuer-letsencrypt-staging.yaml` with the following configuration: 
+1.  Create a file called `issuer-letsencrypt-staging.yaml` with the following configuration:
 
     ```YAML
     apiVersion: certmanager.k8s.io/v1alpha1
@@ -265,32 +248,26 @@ For CIC to use ingress from any namespace, use `ClusterIssuer`. Alternatively yo
 
 2.  After you edit and save the file, deploy the file using the following command:
 
-    ```
-    % kubectl apply -f issuer-letsencrypt-staging.yaml
-    clusterissuer "letsencrypt-staging" created
-    ```
+        % kubectl apply -f issuer-letsencrypt-staging.yaml
+        clusterissuer "letsencrypt-staging" created
 
 3.  Verify in the issuer is created and registered to the ACME server.
 
-    ```
-    % kubectl get issuer
-    NAME                  AGE
-    letsencrypt-staging   8d
-    ```
+        % kubectl get issuer
+        NAME                  AGE
+        letsencrypt-staging   8d
 
 4.  Verify if the `ClusterIssuer` is properly registered using the command `kubectl describe issuer letsencrypt-staging`:
 
-    ```bash
-    Status:
-      Acme:
-        Uri:  https://acme-staging-v02.api.letsencrypt.org/acme/acct/8200869
-      Conditions:
-        Last Transition Time:  2019-02-11T12:06:31Z
-        Message:               The ACME account was registered with the ACME server
-        Reason:                ACMEAccountRegistered
-        Status:                True
-        Type:                  Ready
-    ```
+        Status:
+          Acme:
+            Uri:  https://acme-staging-v02.api.letsencrypt.org/acme/acct/8200869
+          Conditions:
+            Last Transition Time:  2019-02-11T12:06:31Z
+            Message:               The ACME account was registered with the ACME server
+            Reason:                ACMEAccountRegistered
+            Status:                True
+            Type:                  Ready
 
 ### Issue certificate for ingress object
 
@@ -345,13 +322,11 @@ The `kubernetes.io/tls-acme: "true"` annotation tells cert-manager to use the `l
 
 Deploy the `ingress.yaml` using the following command: 
 
-```
-% kubectl apply -f ingress.yml
-ingress.extensions/kuard configured
-% kubectl get ingress kuard
-NAME    HOSTS               ADDRESS   PORTS     AGE
-kuard   kuard.example.com             80, 443   4h39m
-```
+    % kubectl apply -f ingress.yml
+    ingress.extensions/kuard configured
+    % kubectl get ingress kuard
+    NAME    HOSTS               ADDRESS   PORTS     AGE
+    kuard   kuard.example.com             80, 443   4h39m
 
 #### Create a Certificate CRD resource
 
@@ -386,10 +361,8 @@ spec:
 
 Deploy the `certificate.yaml` on the Kubernetes cluster:
 
-```
-kubectl create -f certificate.yaml
-certificate.certmanager.k8s.io/kuard-example-tls created
-```
+    kubectl create -f certificate.yaml
+    certificate.certmanager.k8s.io/kuard-example-tls created
 
 ## Issuing an ACME certificate using DNS challenge
 
@@ -397,7 +370,7 @@ This section describes a way to use DNS validation to get ACME certificate from 
 
 ### Deploy the Let's Encrypt cluster issuer with dns01 challenge provider
 
-1.  Create an `Issuer` or `ClusterIssuer` with dns01 challenge provider. 
+1.  Create an `Issuer` or `ClusterIssuer` with dns01 challenge provider.
 
     You can provide multiple providers under dns01, and specify which provider to be used at the time of certificate creation.
     You need to have access to the DNS provider for cert-manager to create a TXT record, the credentials are stored in Kubernetes secret specified in `spec.dns01.secretAccessKeySecretRef`. For detailed instructions on how to obtain the credentials, see the DNS provider documentation.
@@ -411,12 +384,12 @@ This section describes a way to use DNS validation to get ACME certificate from 
       acme:
         # The ACME server URL
         server: https://acme-staging-v02.api.letsencrypt.org/directory
-    # Email address used for ACME registration
+        # Email address used for ACME registration
         email: "user@example.com"
-    # Name of a secret used to store the ACME account private key
+        # Name of a secret used to store the ACME account private key
         privateKeySecretRef:
           name: letsencrypt-staging
-    # Enable the DNS-01 challenge provider
+        # Enable the DNS-01 challenge provider
         dns01:
           providers:
           - name: dns
@@ -432,36 +405,30 @@ This section describes a way to use DNS validation to get ACME certificate from 
     !!! note "Note"
         Replace `user@example.com` with your email address.
 
-        For each domain mentioned in a dns01 stanza, cert-manager will use the provider's credentials from the referenced Issuer to create a TXT record called _acme-challenge. This record will then be verified by the ACME server in order to issue the certificate. For more information about the DNS provider configuration, and the list of supported providers, see [dns01 reference doc](https://docs.cert-manager.io/en/latest/tasks/acme/configuring-dns01/).
+        For each domain mentioned in a dns01 stanza, cert-manager will use the provider's credentials from the referenced Issuer to create a TXT record called `_acme-challenge`. This record is then verified by the ACME server in order to issue the certificate. For more information about the DNS provider configuration, and the list of supported providers, see [dns01 reference doc](https://docs.cert-manager.io/en/latest/tasks/acme/configuring-dns01/).
 
 2.  After you edit and save the file, deploy the file using the following command:
 
-    ```
-    % kubectl apply -f issuer-letsencrypt-staging.yaml
-    clusterissuer "letsencrypt-staging" created
-    ```
+        % kubectl apply -f issuer-letsencrypt-staging.yaml
+        clusterissuer "letsencrypt-staging" created
 
-3.  Verify if the issuer is created and registered to the ACME server using the following command: 
+3.  Verify if the issuer is created and registered to the ACME server using the following command:
 
-    ```
-    % kubectl get issuer
-    NAME                  AGE
-    letsencrypt-staging   8d
-    ```
+        % kubectl get issuer
+        NAME                  AGE
+        letsencrypt-staging   8d
 
 4.  Verify if the `ClusterIssuer` is properly registered using the command `kubectl describe issuer letsencrypt-staging`:
 
-    ```
-    Status:
-      Acme:
-        Uri:  https://acme-staging-v02.api.letsencrypt.org/acme/acct/8200869
-      Conditions:
-        Last Transition Time:  2019-02-11T12:06:31Z
-        Message:               The ACME account was registered with the ACME server
-        Reason:                ACMEAccountRegistered
-        Status:                True
-        Type:                  Ready
-    ```
+        Status:
+          Acme:
+            Uri:  https://acme-staging-v02.api.letsencrypt.org/acme/acct/8200869
+          Conditions:
+            Last Transition Time:  2019-02-11T12:06:31Z
+            Message:               The ACME account was registered with the ACME server
+            Reason:                ACMEAccountRegistered
+            Status:                True
+            Type:                  Ready
 
 ### Issue certificate for ingress object
 
@@ -515,107 +482,101 @@ For HTTP challenge, cert-manager will create a temporary ingress resource to rou
 
 You can watch the progress of the certificate as it's issued, use the following command:
 
-```
-% kubectl describe certificates kuard-example-tls  | tail -n 6
-  Type    Reason         Age                From          Message
-  ----    ------         ----               ----          -------
-  Normal  Generated      25m                cert-manager  Generated new private key
-  Normal  OrderCreated   14m (x2 over 25m)  cert-manager  Created Order resource "kuard-example-tls-1006173429"
-  Normal  OrderComplete  13m (x2 over 25m)  cert-manager  Order "kuard-example-tls-1006173429" completed successfully
-  Normal  CertIssued     13m (x2 over 25m)  cert-manager  Certificate issued successfully
-```
+    % kubectl describe certificates kuard-example-tls  | tail -n 6
+      Type    Reason         Age                From          Message
+      ----    ------         ----               ----          -------
+      Normal  Generated      25m                cert-manager  Generated new private key
+      Normal  OrderCreated   14m (x2 over 25m)  cert-manager  Created Order resource "kuard-example-tls-1006173429"
+      Normal  OrderComplete  13m (x2 over 25m)  cert-manager  Order "kuard-example-tls-1006173429" completed successfully
+      Normal  CertIssued     13m (x2 over 25m)  cert-manager  Certificate issued successfully
 
 Letsencrypt CA successfully validated the domain and issued a new certificate for the domain. A `kubernetes.io/tls` secret is created with the `secretName` specified in the `tls:` field of the Ingress. Also, cert-manager automatically initiates a renewal, 30 days before the expiry.
 
 Verify in the secret is created using the following command:
 
-```
-% kubectl get secret kuard-example-tls
-NAME                TYPE                DATA   AGE
-kuard-example-tls   kubernetes.io/tls   3      30m
-```
+    % kubectl get secret kuard-example-tls
+    NAME                TYPE                DATA   AGE
+    kuard-example-tls   kubernetes.io/tls   3      30m
 
 The secret is picked up by Citrix ingress controller and binds the certificate to the Content switching virtual server on the Citrix ADC CPX.
 
 Log on to Citrix ADC CPX and verify if the certificate is bound to the SSL virtual server.
 
-```
-kubectl exec -it cpx-ingress-668bf6695f-4fwh8 bash
-root@cpx-ingress-668bf6695f-4fwh8:/# cli_script.sh 'sh ssl vserver'
-exec: sh ssl vserver
-1) Vserver Name: k8s-10.244.3.148:443:ssl
-	DH: DISABLED
-	DH Private-Key Exponent Size Limit: DISABLED	Ephemeral RSA: ENABLED		Refresh Count: 0
-	Session Reuse: ENABLED		Timeout: 120 seconds
-	Cipher Redirect: DISABLED
-	SSLv2 Redirect: DISABLED
-	ClearText Port: 0
-	Client Auth: DISABLED
-	SSL Redirect: DISABLED
-	Non FIPS Ciphers: DISABLED
-	SNI: ENABLED
-	OCSP Stapling: DISABLED
-	HSTS: DISABLED
-	HSTS IncludeSubDomains: NO
-	HSTS Max-Age: 0
-	SSLv2: DISABLED  SSLv3: ENABLED  TLSv1.0: ENABLED  TLSv1.1: ENABLED  TLSv1.2: ENABLED  TLSv1.3: DISABLED
-	Push Encryption Trigger: Always
-	Send Close-Notify: YES
-	Strict Sig-Digest Check: DISABLED
-	Zero RTT Early Data: DISABLED
-	DHE Key Exchange With PSK: NO
-	Tickets Per Authentication Context: 1
-Done
-root@cpx-ingress-668bf6695f-4fwh8:/# cli_script.sh 'sh ssl vserver k8s-10.244.3.148:443:ssl'
-exec: sh ssl vserver k8s-10.244.3.148:443:ssl
+    kubectl exec -it cpx-ingress-668bf6695f-4fwh8 bash
+    root@cpx-ingress-668bf6695f-4fwh8:/# cli_script.sh 'sh ssl vserver'
+    exec: sh ssl vserver
+    1) Vserver Name: k8s-10.244.3.148:443:ssl
+      DH: DISABLED
+      DH Private-Key Exponent Size Limit: DISABLED	Ephemeral RSA: ENABLED		Refresh Count: 0
+      Session Reuse: ENABLED		Timeout: 120 seconds
+      Cipher Redirect: DISABLED
+      SSLv2 Redirect: DISABLED
+      ClearText Port: 0
+      Client Auth: DISABLED
+      SSL Redirect: DISABLED
+      Non FIPS Ciphers: DISABLED
+      SNI: ENABLED
+      OCSP Stapling: DISABLED
+      HSTS: DISABLED
+      HSTS IncludeSubDomains: NO
+      HSTS Max-Age: 0
+      SSLv2: DISABLED  SSLv3: ENABLED  TLSv1.0: ENABLED  TLSv1.1: ENABLED  TLSv1.2: ENABLED  TLSv1.3: DISABLED
+      Push Encryption Trigger: Always
+      Send Close-Notify: YES
+      Strict Sig-Digest Check: DISABLED
+      Zero RTT Early Data: DISABLED
+      DHE Key Exchange With PSK: NO
+      Tickets Per Authentication Context: 1
+    Done
+    root@cpx-ingress-668bf6695f-4fwh8:/# cli_script.sh 'sh ssl vserver k8s-10.244.3.148:443:ssl'
+    exec: sh ssl vserver k8s-10.244.3.148:443:ssl
 
-	Advanced SSL configuration for VServer k8s-10.244.3.148:443:ssl:
-	DH: DISABLED
-	DH Private-Key Exponent Size Limit: DISABLED	Ephemeral RSA: ENABLED		Refresh Count: 0
-	Session Reuse: ENABLED		Timeout: 120 seconds
-	Cipher Redirect: DISABLED
-	SSLv2 Redirect: DISABLED
-	ClearText Port: 0
-	Client Auth: DISABLED
-	SSL Redirect: DISABLED
-	Non FIPS Ciphers: DISABLED
-	SNI: ENABLED
-	OCSP Stapling: DISABLED
-	HSTS: DISABLED
-	HSTS IncludeSubDomains: NO
-	HSTS Max-Age: 0
-	SSLv2: DISABLED  SSLv3: ENABLED  TLSv1.0: ENABLED  TLSv1.1: ENABLED  TLSv1.2: ENABLED  TLSv1.3: DISABLED
-	Push Encryption Trigger: Always
-	Send Close-Notify: YES
-	Strict Sig-Digest Check: DISABLED
-	Zero RTT Early Data: DISABLED
-	DHE Key Exchange With PSK: NO
-	Tickets Per Authentication Context: 1
-, P_256, P_384, P_224, P_5216)	CertKey Name: k8s-VN4RXHGMCZSTMQZOQ3XGBVMM2OO	Server Certificate for SNI
+      Advanced SSL configuration for VServer k8s-10.244.3.148:443:ssl:
+      DH: DISABLED
+      DH Private-Key Exponent Size Limit: DISABLED	Ephemeral RSA: ENABLED		Refresh Count: 0
+      Session Reuse: ENABLED		Timeout: 120 seconds
+      Cipher Redirect: DISABLED
+      SSLv2 Redirect: DISABLED
+      ClearText Port: 0
+      Client Auth: DISABLED
+      SSL Redirect: DISABLED
+      Non FIPS Ciphers: DISABLED
+      SNI: ENABLED
+      OCSP Stapling: DISABLED
+      HSTS: DISABLED
+      HSTS IncludeSubDomains: NO
+      HSTS Max-Age: 0
+      SSLv2: DISABLED  SSLv3: ENABLED  TLSv1.0: ENABLED  TLSv1.1: ENABLED  TLSv1.2: ENABLED  TLSv1.3: DISABLED
+      Push Encryption Trigger: Always
+      Send Close-Notify: YES
+      Strict Sig-Digest Check: DISABLED
+      Zero RTT Early Data: DISABLED
+      DHE Key Exchange With PSK: NO
+      Tickets Per Authentication Context: 1
+    , P_256, P_384, P_224, P_5216)	CertKey Name: k8s-VN4RXHGMCZSTMQZOQ3XGBVMM2OO	Server Certificate for SNI
 
-7)	Cipher Name: DEFAULT
-	Description: Default cipher list with encryption strength >= 128bit
-Done
+    7)	Cipher Name: DEFAULT
+      Description: Default cipher list with encryption strength >= 128bit
+    Done
 
 
-rcli_script.sh 'sh certkey k8s-VN4RXHGMCZSTMQZOQ3XGBVMM2OO'
-exec: sh certkey k8s-VN4RXHGMCZSTMQZOQ3XGBVMM2OO
-	Name: k8s-VN4RXHGMCZSTMQZOQ3XGBVMM2OO		Status: Valid,   Days to expiration:89
-	Version: 3
-	Serial Number: FA0DFEDAB578C0228273927DA7C5E17CF098
-	Signature Algorithm: sha256WithRSAEncryption
-	Issuer:  CN=Fake LE Intermediate X1
-	Validity
-		Not Before: Feb 25 08:00:38 2019 GMT
-		Not After : May 26 08:00:38 2019 GMT
-	Certificate Type:	"Client Certificate"	"Server Certificate"
-	Subject:  CN=kuard.example.com
-	Public Key Algorithm: rsaEncryption
-	Public Key size: 2048
-	Ocsp Response Status: NONE
-	2)	VServer name: k8s-10.244.3.148:443:ssl	Server Certificate for SNI
-Done
-```
+    rcli_script.sh 'sh certkey k8s-VN4RXHGMCZSTMQZOQ3XGBVMM2OO'
+    exec: sh certkey k8s-VN4RXHGMCZSTMQZOQ3XGBVMM2OO
+      Name: k8s-VN4RXHGMCZSTMQZOQ3XGBVMM2OO		Status: Valid,   Days to expiration:89
+      Version: 3
+      Serial Number: FA0DFEDAB578C0228273927DA7C5E17CF098
+      Signature Algorithm: sha256WithRSAEncryption
+      Issuer:  CN=Fake LE Intermediate X1
+      Validity
+        Not Before: Feb 25 08:00:38 2019 GMT
+        Not After : May 26 08:00:38 2019 GMT
+      Certificate Type:	"Client Certificate"	"Server Certificate"
+      Subject:  CN=kuard.example.com
+      Public Key Algorithm: rsaEncryption
+      Public Key size: 2048
+      Ocsp Response Status: NONE
+      2)	VServer name: k8s-10.244.3.148:443:ssl	Server Certificate for SNI
+    Done
 
 The HTTPS webserver is now UP with fake LE signed certificate. Next step is to move to production with actual Let's Encrypt certificate.
 
@@ -647,20 +608,16 @@ spec:
 
 Deploy the file using the following command:
 
-```
-% kubectl apply -f letsencrypt-prod.yaml
-clusterissuer "letsencrypt-prod" created
-```
+    % kubectl apply -f letsencrypt-prod.yaml
+    clusterissuer "letsencrypt-prod" created
 
 Now repeat the procedure of modifying the annotation in ingress or creating a new CRD certificate which will trigger the generation of new certificate.
 
 !!! note "Note"
     Ensure that you delete the old secret so that cert-manager starts a fresh challenge with the production CA.
 
-```
-% kubectl delete secret kuard-example-tls
-secret "kuard-example-tls" deleted
-```
+    % kubectl delete secret kuard-example-tls
+    secret "kuard-example-tls" deleted
 
 Once the HTTP website is up, you can redirect the traffic from HTTP to HTTPS using the annotation `ingress.citrix.com/insecure-termination: redirect` in the ingress object.
 
@@ -672,56 +629,48 @@ Since the certificate generation involves multiple components, this section summ
 
 Certificate CRD object defines the life cycle management of generation and renewal of the certificates. You can view the status of the certificate using `kubectl describe` command as shown below.
 
-```
-% kubectl get certificate
-NAME                READY   SECRET              AGE
-kuard-example-tls   False   kuard-example-tls   9s
+    % kubectl get certificate
+    NAME                READY   SECRET              AGE
+    kuard-example-tls   False   kuard-example-tls   9s
 
-%  kubectl describe certificate kuard-example-tls
+    %  kubectl describe certificate kuard-example-tls
 
-Status:
-  Conditions:
-    Last Transition Time:  2019-03-05T09:50:29Z
-    Message:               Certificate does not exist
-    Reason:                NotFound
-    Status:                False
-    Type:                  Ready
-Events:
-  Type    Reason        Age   From          Message
-  ----    ------        ----  ----          -------
-  Normal  OrderCreated  22s   cert-manager  Created Order resource "kuard-example-tls-1754626579"
-```
+    Status:
+      Conditions:
+        Last Transition Time:  2019-03-05T09:50:29Z
+        Message:               Certificate does not exist
+        Reason:                NotFound
+        Status:                False
+        Type:                  Ready
+    Events:
+      Type    Reason        Age   From          Message
+      ----    ------        ----  ----          -------
+      Normal  OrderCreated  22s   cert-manager  Created Order resource "kuard-example-tls-1754626579"
 
 Also you can view the major certificate events using the `kubectl events` commands:
 
-```
-kubectl get events
-LAST SEEN   TYPE     REASON              KIND          MESSAGE
-36s         Normal   Started             Challenge     Challenge scheduled for processing
-36s         Normal   Created             Order         Created Challenge resource "kuard-example-tls-1754626579-0" for domain "acme.cloudpst.net"
-38s         Normal   OrderCreated        Certificate   Created Order resource "kuard-example-tls-1754626579"
-38s         Normal   CreateCertificate   Ingress       Successfully created Certificate "kuard-example-tls"
-```
+    kubectl get events
+    LAST SEEN   TYPE     REASON              KIND          MESSAGE
+    36s         Normal   Started             Challenge     Challenge scheduled for processing
+    36s         Normal   Created             Order         Created Challenge resource "kuard-example-tls-1754626579-0" for domain "acme.cloudpst.net"
+    38s         Normal   OrderCreated        Certificate   Created Order resource "kuard-example-tls-1754626579"
+    38s         Normal   CreateCertificate   Ingress       Successfully created Certificate "kuard-example-tls"
 
 ### Analyze the logs from cert-manager
 
 In case of failure, first step is to analyze the logs from the cert-manager component.  Identify the cert-manager pod using the following command:
 
-```
-kubectl get po -n cert-manager
-NAME                                    READY   STATUS      RESTARTS   AGE
-cert-manager-76d48d47bf-5w4vx           1/1     Running     0          23h
-cert-manager-webhook-67cfb86d56-6qtxr   1/1     Running     0          23h
-cert-manager-webhook-ca-sync-x4q6f      0/1     Completed   4          23h
-```
+    kubectl get po -n cert-manager
+    NAME                                    READY   STATUS      RESTARTS   AGE
+    cert-manager-76d48d47bf-5w4vx           1/1     Running     0          23h
+    cert-manager-webhook-67cfb86d56-6qtxr   1/1     Running     0          23h
+    cert-manager-webhook-ca-sync-x4q6f      0/1     Completed   4          23h
 
 Here `cert-manager-76d48d47bf-5w4vx` is the main cert-manager pod, and other two pods are cert-manager webhook pods.
 
 Get the logs of the cert-manager using the following command:
 
-```
-kubectl logs -f cert-manager-76d48d47bf-5w4vx -n cert-manager
-```
+    kubectl logs -f cert-manager-76d48d47bf-5w4vx -n cert-manager
 
 If there is any failure to get the certificate, the ERROR logs give details about the failure.
 
@@ -729,25 +678,22 @@ If there is any failure to get the certificate, the ERROR logs give details abou
 
 Use `kubectl describe` command to verify if both certificates and key are populated in Kubernetes secret.
 
-```
-% kubectl describe secret kuard-example-tls
-Name:         kuard-example-tls
-Namespace:    default
-Labels:       certmanager.k8s.io/certificate-name=kuard-example-tls
-Annotations:  certmanager.k8s.io/alt-names: acme.cloudpst.net
-              certmanager.k8s.io/common-name: acme.cloudpst.net
-              certmanager.k8s.io/issuer-kind: ClusterIssuer
-              certmanager.k8s.io/issuer-name: letsencrypt-staging
+    % kubectl describe secret kuard-example-tls
+    Name:         kuard-example-tls
+    Namespace:    default
+    Labels:       certmanager.k8s.io/certificate-name=kuard-example-tls
+    Annotations:  certmanager.k8s.io/alt-names: acme.cloudpst.net
+                  certmanager.k8s.io/common-name: acme.cloudpst.net
+                  certmanager.k8s.io/issuer-kind: ClusterIssuer
+                  certmanager.k8s.io/issuer-name: letsencrypt-staging
 
-Type:  kubernetes.io/tls
+    Type:  kubernetes.io/tls
 
-Data
-====
-tls.crt:  3553 bytes
-tls.key:  1679 bytes
-ca.crt:   0 bytes
-
-```
+    Data
+    ====
+    tls.crt:  3553 bytes
+    tls.key:  1679 bytes
+    ca.crt:   0 bytes
 
 If both `tls.crt` and `tls.key` are populated in the kubernetes secret, certificate generation is complete.  If only tls.key is present, certificate generation is incomplete. Analyze the cert-manager logs for more details about the issue.
 
@@ -755,6 +701,4 @@ If both `tls.crt` and `tls.key` are populated in the kubernetes secret, certific
 
 If kubernetes secret is generated and complete, but this secret is not uploaded to Citrix ADC CPX or VPX, you can analyze the logs from citrix ingress controller using `kubectl logs` command.
 
-```
-% kubectl logs -f cpx-ingress-685c8bc976-zgz8q
-```
+    % kubectl logs -f cpx-ingress-685c8bc976-zgz8q  
