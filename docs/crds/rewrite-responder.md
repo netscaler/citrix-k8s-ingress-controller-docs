@@ -237,7 +237,7 @@ You can add multiple policy configurations in a single `.yaml` file and apply th
 
 **multi-policy-config.yaml:**
 
-```YAML
+``` YAML
 apiVersion: citrix.com/v1
 kind: rewritepolicy
 metadata:
@@ -288,7 +288,7 @@ spec:
         - key: '"/app2/"'
           value: '"/internal-app2/"'
 
-````
+```
 
 The example contains two responder policies and a rewrite policy, based on these policies the Citrix ADC device performs the following:
 

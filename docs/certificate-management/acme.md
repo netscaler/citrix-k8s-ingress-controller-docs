@@ -84,27 +84,25 @@ Perform the following to deploy a sample web application:
 
 1.  Create a deployment YAML file (`kuard-deployment.yaml`) for Kuard with the following configuration:
 
-      ```yml
-      apiVersion: extensions/v1beta1
-      kind: Deployment
-      metadata:
-        name: kuard
-      spec:
-        replicas: 1
-        template:
-          metadata:
-            labels:
-              app: kuard
-          spec:
-            containers:
-            - image: gcr.io/kuar-demo/kuard-amd64:1
-              imagePullPolicy: Always
-              name: kuard
-              ports:
-              - containerPort: 8080
-      ```
+        apiVersion: extensions/v1beta1
+        kind: Deployment
+        metadata:
+          name: kuard
+        spec:
+          replicas: 1
+          template:
+            metadata:
+              labels:
+                app: kuard
+            spec:
+              containers:
+              - image: gcr.io/kuar-demo/kuard-amd64:1
+                imagePullPolicy: Always
+                name: kuard
+                ports:
+                - containerPort: 8080
 
-2.  Deploy Kuard deployment file (`kuard-deployment.yaml`) to your cluster, using the following commands:
+1.  Deploy Kuard deployment file (`kuard-deployment.yaml`) to your cluster, using the following commands:
 
         % kubectl create -f kuard-deployment.yaml
         deployment.extensions/kuard created
@@ -112,23 +110,21 @@ Perform the following to deploy a sample web application:
         NAME                     READY   STATUS    RESTARTS   AGE
         kuard-6fc4d89bfb-djljt   1/1     Running   0          24s
 
-3.  Create a service for the deployment. Create a file called `service.yaml` with the following configuration:
+1.  Create a service for the deployment. Create a file called `service.yaml` with the following configuration:
 
-      ```YAML
-      apiVersion: v1
-      kind: Service
-      metadata:
-       name: kuard
-      spec:
-        ports:
-        - port: 80
-          targetPort: 8080
-          protocol: TCP
-        selector:
-          app: kuard
-      ```
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: kuard
+        spec:
+          ports:
+          - port: 80
+            targetPort: 8080
+            protocol: TCP
+          selector:
+            app: kuard
 
-4.  Deploy and verify the service using the following commands:
+1.  Deploy and verify the service using the following commands:
 
         % kubectl create -f service.yaml
         service/kuard created
@@ -136,33 +132,31 @@ Perform the following to deploy a sample web application:
         NAME    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
         kuard   ClusterIP   10.103.49.171   <none>        80/TCP    13s
 
-
-5.  Expose this service to outside world by creating and Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server.
+1.  Expose this service to outside world by creating and Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server.
 
     !!! note "Note"
         Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which CIC is started.
 
-    ```YAML
-    apiVersion: extensions/v1beta1
-    kind: Ingress
-    metadata:
-      name: kuard
-      annotations:
-        kubernetes.io/ingress.class: "citrix"
-    spec:
-      rules:
-      - host: kuard.example.com
-        http:
-          paths:
-          - backend:
-              serviceName: kuard
-              servicePort: 80
-    ```
+
+            apiVersion: extensions/v1beta1
+            kind: Ingress
+            metadata:
+              name: kuard
+              annotations:
+                kubernetes.io/ingress.class: "citrix"
+            spec:
+              rules:
+              - host: kuard.example.com
+                http:
+                  paths:
+                  - backend:
+                      serviceName: kuard
+                      servicePort: 80
 
     !!! info "Important"
         Change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Citrix ADC CPX or VPX.
 
-6.  Deploy the Ingress using the following command:
+1.  Deploy the Ingress using the following command:
 
         % kubectl apply -f ingress.yml
         ingress.extensions/kuard created
@@ -170,7 +164,7 @@ Perform the following to deploy a sample web application:
         NAME    HOSTS               ADDRESS   PORTS   AGE
         kuard   kuard.example.com             80      7s
 
-7.  Verify if the ingress is configured on Citrix ADC CPX or VPX using the following command: 
+1.  Verify if the ingress is configured on Citrix ADC CPX or VPX using the following command: 
 
         $ kubectl exec -it cpx-ingress-5b85d7c69d-ngd72 /bin/bash
         root@cpx-ingress-5b85d7c69d-ngd72:/# cli_script.sh 'sh cs vs'
@@ -201,7 +195,7 @@ Perform the following to deploy a sample web application:
         root@cpx-ingress-5b85d7c69d-ngd72:/# exit
         exit
 
-8.  Verify if the page is correctly being served when requested using the `curl` command.
+1.  Verify if the page is correctly being served when requested using the `curl` command.
 
         % curl -sS -D - kuard.example.com -o /dev/null
         HTTP/1.1 200 OK
@@ -223,23 +217,22 @@ For CIC to use ingress from any namespace, use `ClusterIssuer`. Alternatively yo
 
 1.  Create a file called `issuer-letsencrypt-staging.yaml` with the following configuration:
 
-    ```YAML
-    apiVersion: certmanager.k8s.io/v1alpha1
-    kind: ClusterIssuer
-    metadata:
-      name: letsencrypt-staging
-    spec:
-      acme:
-        # The ACME server URL
-        server: https://acme-staging-v02.api.letsencrypt.org/directory
-        # Email address used for ACME registration
-        email: user@example.com
-        # Name of a secret used to store the ACME account private key
-        privateKeySecretRef:
+        apiVersion: certmanager.k8s.io/v1alpha1
+        kind: ClusterIssuer
+        metadata:
           name: letsencrypt-staging
-        # Enable the HTTP-01 challenge provider
-        http01: {}
-    ```
+        spec:
+          acme:
+            # The ACME server URL
+            server: https://acme-staging-v02.api.letsencrypt.org/directory
+            # Email address used for ACME registration
+            email: user@example.com
+            # Name of a secret used to store the ACME account private key
+            privateKeySecretRef:
+              name: letsencrypt-staging
+            # Enable the HTTP-01 challenge provider
+            http01: {}
+
 
     !!! note "Note"
         http01 challenge provider is enabled in the `ClusterIssuer` CRD. Replace `user@example.com` with your email address. This is the email address that Let's Encrypt uses to communicate with you about certificates you request. For more information, see [Issuer reference docs](https://docs.cert-manager.io/en/latest/reference/issuers.html).
@@ -285,10 +278,8 @@ First method is quick and simple, but if you need more customization and granula
 
 In this approach, we'll add these two annotations to ingress object for which you request certificate to be issued by the ACME server.
 
-```YAML
     kubernetes.io/tls-acme: "true"
     certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
-```
 
 !!! note "Note"
     You can find all supported annotations from cert-manager for ingress-shim, click [here](https://cert-manager.readthedocs.io/en/latest/tasks/issuing-certificates/ingress-shim.html#supported-annotations).
@@ -375,32 +366,30 @@ This section describes a way to use DNS validation to get ACME certificate from 
     You can provide multiple providers under dns01, and specify which provider to be used at the time of certificate creation.
     You need to have access to the DNS provider for cert-manager to create a TXT record, the credentials are stored in Kubernetes secret specified in `spec.dns01.secretAccessKeySecretRef`. For detailed instructions on how to obtain the credentials, see the DNS provider documentation.
 
-    ```YAML
-    apiVersion: certmanager.k8s.io/v1alpha1
-    kind: ClusterIssuer
-    metadata:
-      name: letsencrypt-staging
-    spec:
-      acme:
-        # The ACME server URL
-        server: https://acme-staging-v02.api.letsencrypt.org/directory
-        # Email address used for ACME registration
-        email: "user@example.com"
-        # Name of a secret used to store the ACME account private key
-        privateKeySecretRef:
+        apiVersion: certmanager.k8s.io/v1alpha1
+        kind: ClusterIssuer
+        metadata:
           name: letsencrypt-staging
-        # Enable the DNS-01 challenge provider
-        dns01:
-          providers:
-          - name: dns
-            route53:
-              region: us-east-1
-              hostedZoneID: YOURZONEID
-              accessKeyID: YOURACCESSKEYID
-              secretAccessKeySecretRef:
-                name: acme-route53
-                key: secret-access-key
-    ```
+        spec:
+          acme:
+            # The ACME server URL
+            server: https://acme-staging-v02.api.letsencrypt.org/directory
+            # Email address used for ACME registration
+            email: "user@example.com"
+            # Name of a secret used to store the ACME account private key
+            privateKeySecretRef:
+              name: letsencrypt-staging
+            # Enable the DNS-01 challenge provider
+            dns01:
+              providers:
+              - name: dns
+                route53:
+                  region: us-east-1
+                  hostedZoneID: YOURZONEID
+                  accessKeyID: YOURACCESSKEYID
+                  secretAccessKeySecretRef:
+                    name: acme-route53
+                    key: secret-access-key
 
     !!! note "Note"
         Replace `user@example.com` with your email address.
@@ -443,10 +432,10 @@ Once the issuer is successfully registered, lets proceed to get certificate for 
 Add the following annotations to the ingress object along with `spec.tls` section:
 
 ```YAML
-    kubernetes.io/tls-acme: "true"
-    certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
-    certmanager.k8s.io/acme-challenge-type: "dns01"
-    certmanager.k8s.io/acme-dns01-provider: dns
+kubernetes.io/tls-acme: "true"
+certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
+certmanager.k8s.io/acme-challenge-type: "dns01"
+certmanager.k8s.io/acme-dns01-provider: dns
 ```
 
 ```YAML

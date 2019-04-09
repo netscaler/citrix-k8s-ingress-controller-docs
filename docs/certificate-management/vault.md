@@ -85,25 +85,23 @@ Perform the following steps to deploy a sample web application.
 
 1.  Create a deployment YAML file (`kuard-deployment.yaml`) for Kuard with the following configuration.
 
-    ```YAML
-    apiVersion: extensions/v1beta1
-    kind: Deployment
-    metadata:
-      name: kuard
-    spec:
-      replicas: 1
-      template:
+        apiVersion: extensions/v1beta1
+        kind: Deployment
         metadata:
-          labels:
-            app: kuard
+          name: kuard
         spec:
-          containers:
-          - image: gcr.io/kuar-demo/kuard-amd64:1
-            imagePullPolicy: Always
-            name: kuard
-            ports:
-            - containerPort: 8080
-    ```
+          replicas: 1
+          template:
+            metadata:
+              labels:
+                app: kuard
+            spec:
+              containers:
+              - image: gcr.io/kuar-demo/kuard-amd64:1
+                imagePullPolicy: Always
+                name: kuard
+                ports:
+                - containerPort: 8080
 
 1.  Deploy Kuard deployment file (`kuard-deployment.yaml`) to your cluster, using the following commands.
 
@@ -115,19 +113,17 @@ Perform the following steps to deploy a sample web application.
 
 1.  Create a service for the deployment. Create a file called `service.yaml` with the following configuration.
 
-    ```YAML
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: kuard
-    spec:
-      ports:
-      - port: 80
-        targetPort: 8080
-        protocol: TCP
-      selector:
-        app: kuard
-    ```
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: kuard
+        spec:
+          ports:
+          - port: 80
+            targetPort: 8080
+            protocol: TCP
+          selector:
+            app: kuard
 
 1.  Deploy and verify the service using the following command.
 
@@ -143,22 +139,21 @@ Perform the following steps to deploy a sample web application.
     !!! note "Note"
         Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which CIC is started.
 
-    ```YAML
-    apiVersion: extensions/v1beta1
-    kind: Ingress
-    metadata:
-      name: kuard
-      annotations:
-        kubernetes.io/ingress.class: "citrix"
-    spec:
-      rules:
-      - host: kuard.example.com
-        http:
-          paths:
-          - backend:
-              serviceName: kuard
-              servicePort: 80
-    ```
+        apiVersion: extensions/v1beta1
+        kind: Ingress
+        metadata:
+          name: kuard
+          annotations:
+            kubernetes.io/ingress.class: "citrix"
+        spec:
+          rules:
+          - host: kuard.example.com
+            http:
+              paths:
+              - backend:
+                  serviceName: kuard
+                  servicePort: 80
+  
 
     !!! info "Important"
         Change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Citrix ADC CPX or VPX.
@@ -272,17 +267,11 @@ After creating the root CA, perform the following steps to create an intermediat
 
 4.  Once the CSR is signed and the root CA returns a certificate, it needs to added back into the Vault using the following command:
 
-    ```
-    % vault write "${PKI_INT}"/intermediate/set-signed certificate=@intermediate.cert.pem
-
-    ```
+        % vault write "${PKI_INT}"/intermediate/set-signed certificate=@intermediate.cert.pem
 
 5.  Set the CA and CRL location using the following command.
 
-    ```
-    vault write "${PKI_INT}"/config/urls issuing_certificates="${VAULT_ADDR}/v1/${PKI_INT}/ca" crl_distribution_points="${VAULT_ADDR}/v1/${PKI_INT}/crl"
-
-    ```
+        vault write "${PKI_INT}"/config/urls issuing_certificates="${VAULT_ADDR}/v1/${PKI_INT}/ca" crl_distribution_points="${VAULT_ADDR}/v1/${PKI_INT}/crl"
 
 An intermediate CA is setup and can be used to sign certificates for ingress resources.
 
@@ -296,13 +285,11 @@ There are many configurations that can be configured when creating roles, for mo
 
 For the workflow, create a role "***kube-ingress***" that allows you to sign certificates of `${DOMAIN}` and its subdomains with a TTL of 90 days.
 
-```
-# with a Max TTL of 90 days
-vault write ${PKI_INT}/roles/kube-ingress \
-          allowed_domains=${DOMAIN} \
-          allow_subdomains=true \
-          max_ttl="2160h"
-```
+    # with a Max TTL of 90 days
+    vault write ${PKI_INT}/roles/kube-ingress \
+              allowed_domains=${DOMAIN} \
+              allow_subdomains=true \
+              max_ttl="2160h"
 
 ## Create Approle based authentication
 
@@ -314,13 +301,11 @@ An "***AppRole***" represents a set of Vault policies and login constraints that
 
 Create an approle named "***Kube-role***". The secret id for cert-manager should not be expired to use this Approle for authentication, hence do not set a TTL, or set it to 0.
 
-```
-% vault auth enable approle of token ttl 5 minutes
+    % vault auth enable approle of token ttl 5 minutes
 
-% vault write auth/approle/role/kube-role \
-    token_ttl=5m \
-    token_max_ttl=10m
-```
+    % vault write auth/approle/role/kube-role \
+        token_ttl=5m \
+        token_max_ttl=10m
 
 ### Associate a policy with the Approle
 
@@ -328,23 +313,17 @@ Perform the following steps to associate a policy with an Approle.
 
 1.  Create a file `pki_int.hcl` with the following configuration to allow the signing endpoints of the intermediate CA.
 
-    ```
-    path "${PKI_INT}/sign/*" {
-          capabilities = ["create","update"]
-        }
-    ```
+        path "${PKI_INT}/sign/*" {
+              capabilities = ["create","update"]
+            }
 
 2.  Add the file to a new policy called `kube_allow_sign` using the following command.
 
-    ```
-    vault policy write kube-allow-sign pki_int.hcl
-    ```
+        vault policy write kube-allow-sign pki_int.hcl
 
 3.  Update this policy to the approle using the following command.
 
-    ```
-    vault write auth/approle/role/kube-role policies=kube-allow-sign
-    ```
+        vault write auth/approle/role/kube-role policies=kube-allow-sign
 
 The `kube-role` approle allows you to sign the CSR with intermediate CA.
 
@@ -354,19 +333,16 @@ Role id and Secret id is used by cert-manager to authenticate with Vault.
 
 Generate role id and Secret id and encode the `secret_id` with Base64. Perform the following:
 
-```
-% vault read auth/approle/role/kube-role/role-id
-role_id     db02de05-fa39-4855-059b-67221c5c2f63
+    % vault read auth/approle/role/kube-role/role-id
+    role_id     db02de05-fa39-4855-059b-67221c5c2f63
 
-% vault write -f auth/approle/role/kube-role/secret-id
-secret_id               6a174c20-f6de-a53c-74d2-6018fcceff64
-secret_id_accessor      c454f7e5-996e-7230-6074-6ef26b7bcf86
+    % vault write -f auth/approle/role/kube-role/secret-id
+    secret_id               6a174c20-f6de-a53c-74d2-6018fcceff64
+    secret_id_accessor      c454f7e5-996e-7230-6074-6ef26b7bcf86
 
-# encode secret_id with base64
-% echo 6a174c20-f6de-a53c-74d2-6018fcceff64 | Base64
-NmExNzRjMjAtZjZkZS1hNTNjLTc0ZDItNjAxOGZjY2VmZjY0Cg==
-
-```
+    # encode secret_id with base64
+    % echo 6a174c20-f6de-a53c-74d2-6018fcceff64 | Base64
+    NmExNzRjMjAtZjZkZS1hNTNjLTc0ZDItNjAxOGZjY2VmZjY0Cg==
 
 ## Configure issuing certificates in Kubernetes
 
@@ -378,26 +354,21 @@ Perform the following to create a secret with Approle secret id.
 
 1.  Create a secret file called `secretid.yaml` with following configuration.
 
-    ```YAML
-    apiVersion: v1
-    kind: Secret
-    type: Opaque
-    metadata:
-      name: cert-manager-vault-approle
-      namespace: cert-manager
-    data:
-      secretId: "NmExNzRjMjAtZjZkZS1hNTNjLTc0ZDItNjAxOGZjY2VmZjY0Cg=="
-    ````
+        apiVersion: v1
+        kind: Secret
+        type: Opaque
+        metadata:
+          name: cert-manager-vault-approle
+          namespace: cert-manager
+        data:
+          secretId: "NmExNzRjMjAtZjZkZS1hNTNjLTc0ZDItNjAxOGZjY2VmZjY0Cg=="
 
     !!! note "Note"
         `data.secretId` is the base64 encoded Secret Id generated in [Generate the Role id and Secret id](#generate-the-role-id-and-secret-id). If you're using an Issuer resource in the next step, Secret must be in same namespace as the `Issuer`. For `ClusterIssuer`, secret must be in `cert-manager` namespace.
 
 2.  Deploy the secret file (`secretid.yaml`) using the following command.
 
-    ```
-    % kubectl create -f secretid.yaml 
-
-    ```
+        % kubectl create -f secretid.yaml
 
 ### Deploy the Vault cluster issuer
 
@@ -407,46 +378,40 @@ Perform the following steps to deploy the Vault cluster issuer.
 
 1.  Create a file called `issuer-vault.yaml` with the following configuration.
 
-    ```YAML
-    apiVersion: certmanager.k8s.io/v1alpha1
-    kind: ClusterIssuer
-    metadata:
-      name: vault-issuer
-    spec:
-      vault:
-        path: ${PKI_INT}/sign/kube-ingress
-        server: https://vault_ip
-        caBundle: <base64 encoded caBundle PEM file>
-        auth:
-          appRole:
-            path: approle
-            roleId: "db02de05-fa39-4855-059b-67221c5c2f63"
-            secretRef:
-              name: cert-manager-vault-approle
-              key: secretId
-    ```
+        apiVersion: certmanager.k8s.io/v1alpha1
+        kind: ClusterIssuer
+        metadata:
+          name: vault-issuer
+        spec:
+          vault:
+            path: ${PKI_INT}/sign/kube-ingress
+            server: https://vault_ip
+            caBundle: <base64 encoded caBundle PEM file>
+            auth:
+              appRole:
+                path: approle
+                roleId: "db02de05-fa39-4855-059b-67221c5c2f63"
+                secretRef:
+                  name: cert-manager-vault-approle
+                  key: secretId
 
     Replace `PKI_INT` with appropriate path of the intermediate CA. `SecretRef` is the kubernetes secret name created in the previous step. Replace `roleId` with the `role_id` retrieved from Vault.
     An optional base64 encoded caBundle in PEM format can be provided to validate the TLS connection to the Vault Server. When caBundle is set it replaces the CA bundle inside the container running the cert-manager. This parameter has no effect if the connection used is in plain HTTP.
 
 2.  Deploy the file (`issuer-vault.yaml`) using the following command.
 
-    ```
-    % kubectl create -f issuer-vault.yaml
-    ```
+        % kubectl create -f issuer-vault.yaml
 
 3.  Using the following command verify if the Vault cluster issuer is successfully authenticated with the Vault.
 
-    ```
-    % kubectl describe clusterIssuer vault-issuer  | tail -n 7
-      Conditions:
-        Last Transition Time:  2019-02-26T06:18:40Z
-        Message:               Vault verified
-        Reason:                VaultVerified
-        Status:                True
-        Type:                  Ready
-    Events:                    <none>
-    ```
+        % kubectl describe clusterIssuer vault-issuer  | tail -n 7
+          Conditions:
+            Last Transition Time:  2019-02-26T06:18:40Z
+            Message:               Vault verified
+            Reason:                VaultVerified
+            Status:                True
+            Type:                  Ready
+        Events:                    <none>
 
 ### Create a "certificate" CRD object for the certificate
 
@@ -458,180 +423,163 @@ To create a "certificate" CRD object for the certificate, perform the following:
 
 1.  Create a file called `certificate.yaml` with the following configuration.
 
-    ```YAML
-    apiVersion: certmanager.k8s.io/v1alpha1
-    kind: Certificate
-    metadata:
-      name: kuard-example-tls
-      namespace: default
-    spec:
-      secretName: kuard-example-tls
-      issuerRef:
-        kind: ClusterIssuer
-        name: vault-issuer
-      commonName: kuard.example.com
-      duration: 720h
-      #Renew before 7 days of expiry
-      renewBefore: 168h
-      commonName: kuard.example.com
-      dnsNames:
-      - www.kuard.example.com
-    ```
+        apiVersion: certmanager.k8s.io/v1alpha1
+        kind: Certificate
+        metadata:
+          name: kuard-example-tls
+          namespace: default
+        spec:
+          secretName: kuard-example-tls
+          issuerRef:
+            kind: ClusterIssuer
+            name: vault-issuer
+          commonName: kuard.example.com
+          duration: 720h
+          #Renew before 7 days of expiry
+          renewBefore: 168h
+          commonName: kuard.example.com
+          dnsNames:
+          - www.kuard.example.com
 
     The certificate will have CN=`kuard.example.com` and SAN=`Kuard.example.com,www.kuard.example.com`.
     `spec.secretName` is the name of the secret where the certificate is stored after the certificate is issued successfully.
 
 2.  Deploy the file (`certificate.yaml`) on the Kubernetes cluster using the following command.
 
-    ```
-    kubectl create -f certificate.yaml
-    certificate.certmanager.k8s.io/kuard-example-tls created
-    ```
+        kubectl create -f certificate.yaml
+        certificate.certmanager.k8s.io/kuard-example-tls created
 
 ### Verify if the certificate is issued
 
 You can watch the progress of the certificate as it is issued using the following command:
 
-```
-% kubectl describe certificates kuard-example-tls  | grep -A5 Events
-Events:
-  Type    Reason      Age   From          Message
-  ----    ------      ----  ----          -------
-  Normal  CertIssued  48s   cert-manager  Certificate issued successfully
-```
+    % kubectl describe certificates kuard-example-tls  | grep -A5 Events
+    Events:
+      Type    Reason      Age   From          Message
+      ----    ------      ----  ----          -------
+      Normal  CertIssued  48s   cert-manager  Certificate issued successfully
 
->**Important**:
->
->You may encounter some errors due to Vault policies. If you encounter any such errors, return to vault and fix it.
+!!! info "Important"
+    You may encounter some errors due to Vault policies. If you encounter any such errors, return to vault and fix it.
 
 After successful signing, a `kubernetes.io/tls` secret is created with the `secretName` specified in the `Certificate` resource.
 
-```
-% kubectl get secret kuard-example-tls
-NAME                TYPE                DATA   AGE
-kuard-exmaple-tls   kubernetes.io/tls   3      4m20s
-```
+    % kubectl get secret kuard-example-tls
+    NAME                TYPE                DATA   AGE
+    kuard-exmaple-tls   kubernetes.io/tls   3      4m20s
 
 ## Modify the ingress to use the generated secret
 
 Perform the following steps to modify the ingress to use the generated secret.
 
-1. Edit the original ingress and add a `spec.tls` section specifying the secret `kuard-example-tls` as follows.
+1.  Edit the original ingress and add a `spec.tls` section specifying the secret `kuard-example-tls` as follows.
 
-```YAML
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: kuard
-  annotations:
-    kubernetes.io/ingress.class: "citrix"
-spec:
-  tls:
-  - hosts:
-    - kuard.example.com
-    secretName: kuard-example-tls
-  rules:
-  - host: kuard.example.com
-    http:
-      paths:
-      - backend:
-          serviceName: kuard
-          servicePort: 80
-```
+        apiVersion: extensions/v1beta1
+        kind: Ingress
+        metadata:
+          name: kuard
+          annotations:
+            kubernetes.io/ingress.class: "citrix"
+        spec:
+          tls:
+          - hosts:
+            - kuard.example.com
+            secretName: kuard-example-tls
+          rules:
+          - host: kuard.example.com
+            http:
+              paths:
+              - backend:
+                  serviceName: kuard
+                  servicePort: 80
 
-2. Deploy the ingress using the following command.
+1.  Deploy the ingress using the following command.
 
-```
-% kubectl apply -f ingress.yml
-ingress.extensions/kuard created
+        % kubectl apply -f ingress.yml
+        ingress.extensions/kuard created
 
-% kubectl get ingress kuard
-NAME    HOSTS               ADDRESS   PORTS     AGE
-kuard   kuard.example.com             80, 443   12s
+        % kubectl get ingress kuard
+        NAME    HOSTS               ADDRESS   PORTS     AGE
+        kuard   kuard.example.com             80, 443   12s
 
-```
+1.  Log on to CPX and verify if the Certificate is bound to the SSL virtual server.
 
-3. Log on to CPX and verify if the Certificate is bound to the SSL virtual server.
+        kubectl exec -it cpx-ingress-668bf6695f-4fwh8 bash
+        cli_script.sh 'shsslvs'
+        exec: shsslvs
+        1) Vserver Name: k8s-10.244.3.148:443:ssl
+          DH: DISABLED
+          DH Private-Key Exponent Size Limit: DISABLED	Ephemeral RSA: ENABLED		Refresh Count: 0
+          Session Reuse: ENABLED		Timeout: 120 seconds
+          Cipher Redirect: DISABLED
+          SSLv2 Redirect: DISABLED
+          ClearText Port: 0
+          Client Auth: DISABLED
+          SSL Redirect: DISABLED
+          Non FIPS Ciphers: DISABLED
+          SNI: ENABLED
+          OCSP Stapling: DISABLED
+          HSTS: DISABLED
+          HSTS IncludeSubDomains: NO
+          HSTS Max-Age: 0
+          SSLv2: DISABLED  SSLv3: ENABLED  TLSv1.0: ENABLED  TLSv1.1: ENABLED  TLSv1.2: ENABLED  TLSv1.3: DISABLED
+          Push Encryption Trigger: Always
+          Send Close-Notify: YES
+          Strict Sig-Digest Check: DISABLED
+          Zero RTT Early Data: DISABLED
+          DHE Key Exchange With PSK: NO
+          Tickets Per Authentication Context: 1
+        Done
 
-```
-kubectl exec -it cpx-ingress-668bf6695f-4fwh8 bash
-cli_script.sh 'shsslvs'
-exec: shsslvs
-1) Vserver Name: k8s-10.244.3.148:443:ssl
-	DH: DISABLED
-	DH Private-Key Exponent Size Limit: DISABLED	Ephemeral RSA: ENABLED		Refresh Count: 0
-	Session Reuse: ENABLED		Timeout: 120 seconds
-	Cipher Redirect: DISABLED
-	SSLv2 Redirect: DISABLED
-	ClearText Port: 0
-	Client Auth: DISABLED
-	SSL Redirect: DISABLED
-	Non FIPS Ciphers: DISABLED
-	SNI: ENABLED
-	OCSP Stapling: DISABLED
-	HSTS: DISABLED
-	HSTS IncludeSubDomains: NO
-	HSTS Max-Age: 0
-	SSLv2: DISABLED  SSLv3: ENABLED  TLSv1.0: ENABLED  TLSv1.1: ENABLED  TLSv1.2: ENABLED  TLSv1.3: DISABLED
-	Push Encryption Trigger: Always
-	Send Close-Notify: YES
-	Strict Sig-Digest Check: DISABLED
-	Zero RTT Early Data: DISABLED
-	DHE Key Exchange With PSK: NO
-	Tickets Per Authentication Context: 1
-Done
+        root@cpx-ingress-668bf6695f-4fwh8:/# cli_script.sh 'shsslvs k8s-10.244.3.148:443:ssl'
+        exec: shsslvs k8s-10.244.3.148:443:ssl
 
-root@cpx-ingress-668bf6695f-4fwh8:/# cli_script.sh 'shsslvs k8s-10.244.3.148:443:ssl'
-exec: shsslvs k8s-10.244.3.148:443:ssl
+          Advanced SSL configuration for VServer k8s-10.244.3.148:443:ssl:
+          DH: DISABLED
+          DH Private-Key Exponent Size Limit: DISABLED	Ephemeral RSA: ENABLED		Refresh Count: 0
+          Session Reuse: ENABLED		Timeout: 120 seconds
+          Cipher Redirect: DISABLED
+          SSLv2 Redirect: DISABLED
+          ClearText Port: 0
+          Client Auth: DISABLED
+          SSL Redirect: DISABLED
+          Non FIPS Ciphers: DISABLED
+          SNI: ENABLED
+          OCSP Stapling: DISABLED
+          HSTS: DISABLED
+          HSTS IncludeSubDomains: NO
+          HSTS Max-Age: 0
+          SSLv2: DISABLED  SSLv3: ENABLED  TLSv1.0: ENABLED  TLSv1.1: ENABLED  TLSv1.2: ENABLED  TLSv1.3: DISABLED
+          Push Encryption Trigger: Always
+          Send Close-Notify: YES
+          Strict Sig-Digest Check: DISABLED
+          Zero RTT Early Data: DISABLED
+          DHE Key Exchange With PSK: NO
+          Tickets Per Authentication Context: 1
+        , P_256, P_384, P_224, P_5216)	CertKey Name: k8s-LMO3O3U6KC6WXKCBJAQY6K6X6JO	Server Certificate for SNI
 
-	Advanced SSL configuration for VServer k8s-10.244.3.148:443:ssl:
-	DH: DISABLED
-	DH Private-Key Exponent Size Limit: DISABLED	Ephemeral RSA: ENABLED		Refresh Count: 0
-	Session Reuse: ENABLED		Timeout: 120 seconds
-	Cipher Redirect: DISABLED
-	SSLv2 Redirect: DISABLED
-	ClearText Port: 0
-	Client Auth: DISABLED
-	SSL Redirect: DISABLED
-	Non FIPS Ciphers: DISABLED
-	SNI: ENABLED
-	OCSP Stapling: DISABLED
-	HSTS: DISABLED
-	HSTS IncludeSubDomains: NO
-	HSTS Max-Age: 0
-	SSLv2: DISABLED  SSLv3: ENABLED  TLSv1.0: ENABLED  TLSv1.1: ENABLED  TLSv1.2: ENABLED  TLSv1.3: DISABLED
-	Push Encryption Trigger: Always
-	Send Close-Notify: YES
-	Strict Sig-Digest Check: DISABLED
-	Zero RTT Early Data: DISABLED
-	DHE Key Exchange With PSK: NO
-	Tickets Per Authentication Context: 1
-, P_256, P_384, P_224, P_5216)	CertKey Name: k8s-LMO3O3U6KC6WXKCBJAQY6K6X6JO	Server Certificate for SNI
+        7)	Cipher Name: DEFAULT
+          Description: Default cipher list with encryption strength >= 128bit
+        Done
 
-7)	Cipher Name: DEFAULT
-	Description: Default cipher list with encryption strength >= 128bit
-Done
-
-root@cpx-ingress-668bf6695f-4fwh8:/# cli_script.sh 'sh certkey k8s-LMO3O3U6KC6WXKCBJAQY6K6X6JO'
-exec: sh certkey k8s-LMO3O3U6KC6WXKCBJAQY6K6X6JO
-	Name: k8s-LMO3O3U6KC6WXKCBJAQY6K6X6JO		Status: Valid,   Days to expiration:0
-	Version: 3
-	Serial Number: 524C1D9306F784A2F5277C05C2A120D5258D9A2F
-	Signature Algorithm: sha256WithRSAEncryption
-	Issuer:  CN=example.com CA intermediate
-	Validity
-		Not Before: Feb 26 06:48:39 2019 GMT
-		Not After : Feb 27 06:49:09 2019 GMT
-	Certificate Type:	"Client Certificate"	"Server Certificate"
-	Subject:  CN=kuard.example.com
-	Public Key Algorithm: rsaEncryption
-	Public Key size: 2048
-	Ocsp Response Status: NONE
-	2)	 URI:http://127.0.0.1:8200/v1/pki_int/crl
-	3)	VServer name: k8s-10.244.3.148:443:ssl	Server Certificate for SNI
-Done
-
-```
+        root@cpx-ingress-668bf6695f-4fwh8:/# cli_script.sh 'sh certkey k8s-LMO3O3U6KC6WXKCBJAQY6K6X6JO'
+        exec: sh certkey k8s-LMO3O3U6KC6WXKCBJAQY6K6X6JO
+          Name: k8s-LMO3O3U6KC6WXKCBJAQY6K6X6JO		Status: Valid,   Days to expiration:0
+          Version: 3
+          Serial Number: 524C1D9306F784A2F5277C05C2A120D5258D9A2F
+          Signature Algorithm: sha256WithRSAEncryption
+          Issuer:  CN=example.com CA intermediate
+          Validity
+            Not Before: Feb 26 06:48:39 2019 GMT
+            Not After : Feb 27 06:49:09 2019 GMT
+          Certificate Type:	"Client Certificate"	"Server Certificate"
+          Subject:  CN=kuard.example.com
+          Public Key Algorithm: rsaEncryption
+          Public Key size: 2048
+          Ocsp Response Status: NONE
+          2)	 URI:http://127.0.0.1:8200/v1/pki_int/crl
+          3)	VServer name: k8s-10.244.3.148:443:ssl	Server Certificate for SNI
+        Done
 
 The HTTPS webserver is UP with the vault signed certificate. Cert-manager automatically renews the certificate as specified in the 'RenewBefore" parameter in the Certificate, before expiry of the certificate.
 
