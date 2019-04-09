@@ -10,7 +10,7 @@ Once you deploy the Rewrite and Responder CRD in the Kubernetes cluster. You can
 
 ## Deploying the Citrix CRD
 
-The Citrix Rewrite and Responder CRD deployment YAML file (`rewrite-responder-policies-deployment.yaml`) is available at: ***<\location-placeholder>***.
+The Citrix Rewrite and Responder CRD deployment YAML file: [rewrite-responder-policies-deployment.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml).
 
 !!! note "Note"
     Ensure that you do not modify the deployment YAML file.
@@ -237,7 +237,7 @@ You can add multiple policy configurations in a single `.yaml` file and apply th
 
 **multi-policy-config.yaml:**
 
-``` YAML
+``` yaml
 apiVersion: citrix.com/v1
 kind: rewritepolicy
 metadata:
@@ -287,7 +287,6 @@ spec:
           value: '"/internal-app1/"'
         - key: '"/app2/"'
           value: '"/internal-app2/"'
-
 ```
 
 The example contains two responder policies and a rewrite policy, based on these policies the Citrix ADC device performs the following:
