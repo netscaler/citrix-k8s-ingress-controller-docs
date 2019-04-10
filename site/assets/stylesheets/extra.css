@@ -1,0 +1,9 @@
+.md-header-border-top {
+    border-top-width: 0.625rem;
+    border-top-style: solid;
+    border-top-color: rgb(0, 0, 0);
+}
+
+.md-header {
+    height: 3.025rem!important;
+}

@@ -97,6 +97,25 @@ To create the system user account, do the following:
 
 Use the [citrix-k8s-cpx-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml) file to deploy a Citrix ADC CPX with CIC as a sidecar. The YAML file deploys a Citrix ADC CPX instance that is used for load balancing the North-South traffic to the microservices in your Kubernetes cluster.
 
-Using the following command, deploy the [citrix-k8s-cpx-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml) file:
+Perform the following:
 
-    kubectl apply -f  https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
+1.  Download the [citrix-k8s-cpx-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml) using the following command:
+
+        wget https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml
+
+1.  Edit the [citrix-k8s-cpx-ingress.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/baremetal/citrix-k8s-cpx-ingress.yml) file and enter the values for the following environmental variables:
+
+    | Environment Variable | Mandatory or Optional | Description |
+    | ---------------------- | ---------------------- | ----------- |
+    | NS_IP | Mandatory | The IP address of the Citrix ADC appliance. For more details, see [Prerequisites](#prerequisites). |
+    | NS_USER and NS_PASSWORD | Mandatory | The username and password of the Citrix ADC VPX or MPX appliance used as the Ingress device. For more details, see [Prerequisites](#prerequisites). |
+    | EULA | Mandatory | The End User License Agreement. Specify the value as `Yes`.|
+    | NS_PROTOCOL and NS_PORT | Optional | Defines the protocol and port that must be used by CIC to communicate with Citrix ADC. By default, CIC uses HTTPs on port 443. You can also use HHTP on port 80. |
+
+1.  Once you update the environment variables, save the YAML file and deploy it using the following command:
+
+        kubectl create -f citrix-k8s-cpx-ingress.yaml
+
+1.  Verify if CIC is deployed successfully using the following command:
+
+        kubectl get pods --all-namespaces

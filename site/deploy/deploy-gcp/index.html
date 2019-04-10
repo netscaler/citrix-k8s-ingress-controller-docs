@@ -1,0 +1,1167 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="Documentation for the Citrix Ingress Controller for Kubernetes">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="/media/favicon.ico">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.0.1">
+    
+    
+      
+        <title>Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform - Citrix Ingress Controller for Kubernetes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.982221ab.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.224b79ff.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.1f0bcf2b.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    
+      
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="white" data-md-color-accent="blue">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#citrix-adc-cpx-as-an-ingress-in-google-cloud-platform" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <div class="md-header-border-top"/>
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="Citrix Ingress Controller for Kubernetes" class="md-header-nav__button md-logo">
+          
+            <img src="https://developer-docs.citrix.com/_static/Citrix_Logo_Black.png" width="75px" height="28.275px">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              Developer Docs
+            </span>
+            <span class="md-header-nav__topic">
+              Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+<a href="https://github.com/citrix/citrix-k8s-ingress-controller-docs/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Citrix Ingress Controller
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="Citrix Ingress Controller for Kubernetes" class="md-nav__button md-logo">
+      
+        <img src="https://developer-docs.citrix.com/_static/Citrix_Logo_Black.png" width="48" height="48">
+      
+    </a>
+    Citrix Ingress Controller for Kubernetes
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+<a href="https://github.com/citrix/citrix-k8s-ingress-controller-docs/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Citrix Ingress Controller
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Overview" class="md-nav__link">
+      Overview
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../deployment-topologies/" title="Deployment topologies" class="md-nav__link">
+      Deployment topologies
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Deploy Citrix Ingress Controller
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Deploy Citrix Ingress Controller
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../deploy-cic-yaml/" title="Using YAML" class="md-nav__link">
+      Using YAML
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../deploy-cic-helm/" title="Using Helm charts" class="md-nav__link">
+      Using Helm charts
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      Deployment solutions
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Deployment solutions
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../deploy-azure/" title="Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine" class="md-nav__link">
+      Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform
+      </label>
+    
+    <a href="./" title="Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform" class="md-nav__link md-nav__link--active">
+      Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" title="Prerequisites" class="md-nav__link">
+    Prerequisites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-models" title="Deployment models" class="md-nav__link">
+    Deployment models
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standalone-cpx-deployment" title="Standalone CPX deployment" class="md-nav__link">
+    Standalone CPX deployment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-availability-citrix-cpx-deployment" title="High availability Citrix CPX deployment" class="md-nav__link">
+    High availability Citrix CPX deployment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#citrix-cpx-per-node-deployment" title="Citrix CPX per node deployment" class="md-nav__link">
+    Citrix CPX per node deployment
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../licensing/" title="Licensing" class="md-nav__link">
+      Licensing
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Configure
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Configure
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../configure/annotations/" title="Annotations" class="md-nav__link">
+      Annotations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../configure/ingress-classes/" title="Ingress class" class="md-nav__link">
+      Ingress class
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../configure/logging.md" title="Logging" class="md-nav__link">
+      Logging
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      Network
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        Network
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../network/staticrouting/" title="Static routing" class="md-nav__link">
+      Static routing
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+    
+    <label class="md-nav__link" for="nav-8">
+      CRDs
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        CRDs
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../crds/rewrite-responder/" title="Using Rewrite and Responder policies in Kubernetes" class="md-nav__link">
+      Using Rewrite and Responder policies in Kubernetes
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9">
+    
+    <label class="md-nav__link" for="nav-9">
+      Certificate management
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-9">
+        Certificate management
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../certificate-management/tls-certificate-handling-multiple-ingress/" title="TLS certificate handling for multiple Ingress" class="md-nav__link">
+      TLS certificate handling for multiple Ingress
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../certificate-management/tls-certificate-handling/" title="TLS certificates in Citrix Ingress Controller" class="md-nav__link">
+      TLS certificates in Citrix Ingress Controller
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9-3" type="checkbox" id="nav-9-3">
+    
+    <label class="md-nav__link" for="nav-9-3">
+      Automated certificate management with cert-manager
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-9-3">
+        Automated certificate management with cert-manager
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../certificate-management/certificate/" title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../certificate-management/acme/" title="Deploy HTTPs web applications on K8s with CIC and Let’s Encrypt using cert-manager" class="md-nav__link">
+      Deploy HTTPs web applications on K8s with CIC and Let’s Encrypt using cert-manager
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../certificate-management/vault/" title="Deploy HTTPs web application on K8s with CIC and HashiCorp vault using cert-manager" class="md-nav__link">
+      Deploy HTTPs web application on K8s with CIC and HashiCorp vault using cert-manager
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-10" type="checkbox" id="nav-10">
+    
+    <label class="md-nav__link" for="nav-10">
+      Metrics
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-10">
+        Metrics
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../metrics/promotheus-grafana/" title="Integrate with Promotheus and Grafana" class="md-nav__link">
+      Integrate with Promotheus and Grafana
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../troubleshooting/" title="Troubleshooting" class="md-nav__link">
+      Troubleshooting
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../upgrade/" title="Upgrade" class="md-nav__link">
+      Upgrade
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" title="Prerequisites" class="md-nav__link">
+    Prerequisites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-models" title="Deployment models" class="md-nav__link">
+    Deployment models
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standalone-cpx-deployment" title="Standalone CPX deployment" class="md-nav__link">
+    Standalone CPX deployment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-availability-citrix-cpx-deployment" title="High availability Citrix CPX deployment" class="md-nav__link">
+    High availability Citrix CPX deployment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#citrix-cpx-per-node-deployment" title="Citrix CPX per node deployment" class="md-nav__link">
+    Citrix CPX per node deployment
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/citrix/citrix-k8s-ingress-controller-docs/edit/master/docs/deploy/deploy-gcp.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="citrix-adc-cpx-as-an-ingress-in-google-cloud-platform">Citrix ADC CPX as an Ingress in Google Cloud Platform</h1>
+<p>This section explains the deployment of Citrix ADC CPX as an ingress in <a href="https://cloud.google.com/kubernetes-engine/">Google Kubernetes Engine (GKE)</a> and <a href="https://cloud.google.com/compute/">Google Compute Engine (GCE)</a>. The procedure to deploy the Citrix ADC CPX remains the same for both Google Kubernetes Engine (GKE) and Google Compute Engine (GCE). If you configure Kubernetes on Google Compute Engine (GCE), then you need to deploy the CNI plug-in for the kubernetes cluster.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Ensure you have a Kubernetes Cluster up and running.</p>
+<p>If you are running your cluster in GKE, then ensure you have configured a cluster-admin cluster role binding. You can do that using the following command:</p>
+<pre class="codehilite"><code>kubectl create clusterrolebinding citrix-cluster-admin --clusterrole=cluster-admin --user=&lt;email-id of your google account&gt;</code></pre>
+
+
+<p>Get your Google account details using the following command:</p>
+<pre class="codehilite"><code>gcloud info | grep Account</code></pre>
+
+
+<p><strong>To deploy Citrix CPX as an Ingress:</strong></p>
+<ol>
+<li>
+<p>Create a sample application and expose it as service. In our example, let's use an apache web-server.</p>
+<pre class="codehilite"><code>kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/apache.yaml</code></pre>
+
+
+</li>
+<li>
+<p>Create a Citrix CPX</p>
+<pre class="codehilite"><code>kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/standalone_cpx.yaml</code></pre>
+
+
+</li>
+<li>
+<p>Create an ingress object</p>
+<pre class="codehilite"><code>kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx_ingress.yaml</code></pre>
+
+
+</li>
+<li>
+<p>Expose the Citrix CPX as a service of type Load-balancer. It creates an Azure LB with an External IP for receiving traffic. This is supported in kubernetes since v1.10.0.</p>
+<pre class="codehilite"><code>kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/cpx_service.yaml</code></pre>
+
+
+</li>
+<li>
+<p>After executing the command, wait for the load-balancer to create an external IP. View the deployed services using the following command:</p>
+<pre class="codehilite"><code>kubectl get svc</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>NAME</th>
+<th>TYPE</th>
+<th>CLUSTER-IP</th>
+<th>EXTERNAL-IP</th>
+<th>PORT(S)</th>
+<th>AGE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>apache</td>
+<td>ClusterIP</td>
+<td>10.7.248.216</td>
+<td>none</td>
+<td>80/TCP</td>
+<td>2m</td>
+</tr>
+<tr>
+<td>cpx-ingress</td>
+<td>LoadBalancer</td>
+<td>10.7.241.6</td>
+<td>pending</td>
+<td>80:32258/TCP,443:32084/TCP</td>
+<td>2m</td>
+</tr>
+<tr>
+<td>kubernetes</td>
+<td>ClusterIP</td>
+<td>10.7.240.1</td>
+<td>none</td>
+<td>443/TCP</td>
+<td>22h</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Once the IP is available, you can access your resources through the External IP provided by the load-balancer.</p>
+<pre class="codehilite"><code>kubectl get svc</code></pre>
+
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Cluster-IP</th>
+<th>External IP</th>
+<th>Port(s)</th>
+<th>Age</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>apache</td>
+<td>ClusterIP</td>
+<td>10.7.248.216</td>
+<td>none</td>
+<td>80/TCP</td>
+<td>3m</td>
+</tr>
+<tr>
+<td>cpx-ingress</td>
+<td>LoadBalancer</td>
+<td>10.7.241.6</td>
+<td>EXTERNAL-IP CREATED</td>
+<td>80:32258/TCP,443:32084/TCP</td>
+<td>3m</td>
+</tr>
+<tr>
+<td>kubernetes</td>
+<td>ClusterIP</td>
+<td>10.7.240.1</td>
+<td>none</td>
+<td>443/TCP</td>
+<td>22h</td>
+</tr>
+</tbody>
+</table>
+<p>The health check for the cloud load-balancer is obtained from the readinessProbe configured in the <a href="https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/gcp/manifest/cpx_service.yaml">Citrix CPX deployment yaml</a> file. So if the health check fails for some reason, you need to check the readinessProbe configured for Citrix CPX.</p>
+<p>You can read further about <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes">readinessProbe</a> and <a href="https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/">external Load balancer</a></p>
+<p>After the External-IP is created in the service, you can do a curl to the external IP using the host header <strong>citrix-ingress.com</strong></p>
+<pre class="codehilite"><code>curl http://&lt;External-ip-of-loadbalancer&gt;/ -H 'Host: citrix-ingress.com'</code></pre>
+
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For ease of deployment, the following deployment models are explained with an all-in-one manifest file that combines all the explained steps. You can modify the manifest to suit your application and configuration.</p>
+</div>
+</li>
+</ol>
+<h2 id="deployment-models">Deployment models</h2>
+<p>The following are the deployment solutions for deploying CPX as an ingress device in Google Cloud</p>
+<ul>
+<li>
+<p>Standalone Citrix CPX deployment</p>
+</li>
+<li>
+<p>High availability Citrix CPX deployment</p>
+</li>
+<li>
+<p>Citrix CPX per node deployment</p>
+</li>
+</ul>
+<h3 id="standalone-cpx-deployment">Standalone CPX deployment</h3>
+<p>To deploy Citrix CPX as an Ingress in a standalone deployment model in GCP, you must use the Service Type as <strong><em>LoadBalancer</em></strong> that would create a Load-balancer in Google cloud. This is supported in kubernetes since v1.10.0.</p>
+<p><img alt="CPX-GCP-Topology-Standalone" src="../../media/CPX-GCP-Topology-Standalone.png" /></p>
+<ol>
+<li>
+<p>Execute the following command to create a Citrix CPX ingress with Citrix Ingress Controller as a sidecar in your Kubernetes cluster:</p>
+<pre class="codehilite"><code>kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one.yaml</code></pre>
+
+
+</li>
+<li>
+<p>To access the application:</p>
+<pre class="codehilite"><code>curl http://&lt;External-ip-of-loadbalancer&gt;/ -H 'Host: citrix-ingress.com'</code></pre>
+
+
+</li>
+</ol>
+<p>To delete the deployment, use the following command:</p>
+<pre class="codehilite"><code>kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one.yaml</code></pre>
+
+
+<h3 id="high-availability-citrix-cpx-deployment">High availability Citrix CPX deployment</h3>
+<p>In the standalone deployment of Citrix ADC CPX as ingress, if the ingress device fails for some reason there would be a traffic outage for a few seconds. To avoid this disruption, instead of deploying a single CPX ingress, you can deploy two CPX ingress devices. So that if one CPX fails, the other CPX is available to handle traffic until the failed CPX comes up.</p>
+<p><img alt="CPX-GCP-HA-Solution-Topology" src="../../media/CPX-GCP-HA-Solution-Topology.png" /></p>
+<ol>
+<li>
+<p>Execute the following command to create a CPX ingress with Citrix Ingress Controller as a sidecar in your kubernetes cluster:</p>
+<pre class="codehilite"><code>kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-ha.yaml</code></pre>
+
+
+</li>
+<li>
+<p>To access the application:</p>
+<pre class="codehilite"><code>curl http://&lt;External-ip-of-loadbalancer&gt;/ -H 'Host: citrix-ingress.com'</code></pre>
+
+
+</li>
+</ol>
+<p>To delete the deployment, use the following command:</p>
+<pre class="codehilite"><code>kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-ha.yaml</code></pre>
+
+
+<h3 id="citrix-cpx-per-node-deployment">Citrix CPX per node deployment</h3>
+<p>Sometimes where cluster nodes are added and removed from the cluster, CPX can also be deployed as daemonsets so that every node has a CPX ingress in them. This is much more reliable solution than deploying two CPX as ingress devices when the traffic is high.</p>
+<p><img alt="CPX-GCP-Daemonset-Topology" src="../../media/CPX-GCP-Daemonset-Topology.png" /></p>
+<ol>
+<li>
+<p>Execute the following command to create a CPX ingress with in built Citrix Ingress Controller in your kubernetes cluster:</p>
+<pre class="codehilite"><code>kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-reliable.yaml</code></pre>
+
+
+</li>
+<li>
+<p>To access the application:</p>
+<pre class="codehilite"><code>curl http://&lt;External-ip-of-loadbalancer&gt;/ -H 'Host: citrix-ingress.com'</code></pre>
+
+
+</li>
+</ol>
+<p>To delete the deployment, use the following command:</p>
+<pre class="codehilite"><code>kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-reliable.yaml</code></pre>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../deploy-azure/" title="Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../../licensing/" title="Licensing" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Licensing
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 1999-2019 Citrix Systems, Inc. All rights reserved.  | <a href="http://www.citrix.com/about/legal/legal-notice.html">Terms of Use | <a href="#" onclick="event.preventDefault(); window.evidon.notice.showConsentTool();">Cookie Preferences</a></a></p>
+          </div>
+        
+      </div>
+      
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="../../assets/fonts/font-awesome.css">
+    
+      <a href="https://www.youtube.com/channel/UCiOupk9QF6jdk3EDKTHDykA" class="md-footer-social__link fa fa-youtube"></a>
+    
+      <a href="https://github.com/citrix" class="md-footer-social__link fa fa-github-alt"></a>
+    
+      <a href="https://twitter.com/citrixdeveloper" class="md-footer-social__link fa fa-twitter"></a>
+    
+      <a href="https://www.linkedin.com/company/citrix/" class="md-footer-social__link fa fa-linkedin"></a>
+    
+  </div>
+
+    </div>
+  </div>
+<script type="text/javascript">
+(function (id) {
+    function append(scriptid, url, async) {
+        var d = document, sn = 'script', f = d.getElementsByTagName(sn)[0];
+        if (!f) f = d.head;
+        var s = d.createElement(sn);
+        s.async = true;
+        s.id = scriptid;
+        s.src = url;
+        f.parentNode.insertBefore(s, f);
+    }
+
+    function getRootDomain() {
+        var parts = window.location.hostname.split('.');
+        if (parts.length === 2) rootDomain = parts[0];
+        else if (parts.length > 2) {
+          // see if the next to last value is a common tld
+          var part = parts[parts.length - 2];
+          if (part === 'com' || part === 'co') {
+            rootDomain = parts[parts.length - 3]; // go back one more
+          }
+          else {
+            rootDomain = part;
+          }
+        }
+
+      return rootDomain;
+    }
+
+    window.evidon = {};
+    window.evidon.id = id;
+    var cdn = '//c.evidon.com/', rootDomain = getRootDomain(), noticecdn = cdn + 'sitenotice/';
+    append('evidon-notice', noticecdn + 'evidon-sitenotice-tag.js', false);
+    append('evidon-location', cdn + 'geo/country.js', true);
+    append('evidon-themes', noticecdn + id + '/snthemes.js', true);
+    if (rootDomain) append('evidon-settings', noticecdn + id + '/' + rootDomain + '/settings.js', true);
+
+    window.evidon.priorConsentCallback = function () {
+        // add the tags which need to wait for prior consent
+        // here.  This should be all your advertising tags and
+        // probably most of your social and tracking tags.
+    }
+})(3010);
+</script>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.43ad2ac2.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      
+    
+  </body>
+</html>

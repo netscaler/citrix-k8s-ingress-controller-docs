@@ -28,7 +28,7 @@ Ensure that you have:
   
     Similarly in Tier 2 deployment model, a TCP service is configured on the Citrix ADC (VPX/MPX) running outside the Kubernetes cluster to forward the traffic to Citrix ADC CPX instances running in kubernetes cluster.  Citrix ADC CPX ends the SSL session and load-balances the traffic to actual service pods.
 
--  Deployed Citrix ingress controller. Click [here](../deployment-topologies.mddeployment-topologies.html) for various deployment scenarios.
+-  Deployed Citrix ingress controller. Click [here](../deployment-topologies.md#deployment-topologies.html) for various deployment scenarios.
 
 -  Opened Port 80 for the Virtual IP address on the firewall for the Let's Encrypt CA to validate the domain for HTTP01 challenge.
 

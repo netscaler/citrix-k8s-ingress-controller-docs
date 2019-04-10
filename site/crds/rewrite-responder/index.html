@@ -1,0 +1,1564 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="Documentation for the Citrix Ingress Controller for Kubernetes">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="/media/favicon.ico">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.0.1">
+    
+    
+      
+        <title>Using Rewrite and Responder policies in Kubernetes - Citrix Ingress Controller for Kubernetes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.982221ab.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.224b79ff.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.1f0bcf2b.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    
+      
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="white" data-md-color-accent="blue">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#using-rewrite-and-responder-policies-in-kubernetes" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <div class="md-header-border-top"/>
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="Citrix Ingress Controller for Kubernetes" class="md-header-nav__button md-logo">
+          
+            <img src="https://developer-docs.citrix.com/_static/Citrix_Logo_Black.png" width="75px" height="28.275px">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              Developer Docs
+            </span>
+            <span class="md-header-nav__topic">
+              Using Rewrite and Responder policies in Kubernetes
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+<a href="https://github.com/citrix/citrix-k8s-ingress-controller-docs/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Citrix Ingress Controller
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="Citrix Ingress Controller for Kubernetes" class="md-nav__button md-logo">
+      
+        <img src="https://developer-docs.citrix.com/_static/Citrix_Logo_Black.png" width="48" height="48">
+      
+    </a>
+    Citrix Ingress Controller for Kubernetes
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+<a href="https://github.com/citrix/citrix-k8s-ingress-controller-docs/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Citrix Ingress Controller
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Overview" class="md-nav__link">
+      Overview
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../deployment-topologies/" title="Deployment topologies" class="md-nav__link">
+      Deployment topologies
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Deploy Citrix Ingress Controller
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Deploy Citrix Ingress Controller
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../deploy/deploy-cic-yaml/" title="Using YAML" class="md-nav__link">
+      Using YAML
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../deploy/deploy-cic-helm/" title="Using Helm charts" class="md-nav__link">
+      Using Helm charts
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Deployment solutions
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Deployment solutions
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../deploy/deploy-azure/" title="Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine" class="md-nav__link">
+      Deploy Citrix ADC CPX as an Ingress in Azure Kubernetes Engine
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../deploy/deploy-gcp/" title="Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform" class="md-nav__link">
+      Deploy Citrix ADC CPX as an Ingress in Google Cloud Platform
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../licensing/" title="Licensing" class="md-nav__link">
+      Licensing
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Configure
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Configure
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../configure/annotations/" title="Annotations" class="md-nav__link">
+      Annotations
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../configure/ingress-classes/" title="Ingress class" class="md-nav__link">
+      Ingress class
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../configure/logging.md" title="Logging" class="md-nav__link">
+      Logging
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      Network
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        Network
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../network/staticrouting/" title="Static routing" class="md-nav__link">
+      Static routing
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8" checked>
+    
+    <label class="md-nav__link" for="nav-8">
+      CRDs
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        CRDs
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Using Rewrite and Responder policies in Kubernetes
+      </label>
+    
+    <a href="./" title="Using Rewrite and Responder policies in Kubernetes" class="md-nav__link md-nav__link--active">
+      Using Rewrite and Responder policies in Kubernetes
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-the-citrix-crd" title="Deploying the Citrix CRD" class="md-nav__link">
+    Deploying the Citrix CRD
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crd-attributes" title="CRD attributes" class="md-nav__link">
+    CRD attributes
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rewrite-policy" title="Rewrite policy" class="md-nav__link">
+    Rewrite policy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responder-policy" title="Responder policy" class="md-nav__link">
+    Responder policy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-log" title="Audit log" class="md-nav__link">
+    Audit log
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataset" title="Dataset" class="md-nav__link">
+    Dataset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patset" title="Patset" class="md-nav__link">
+    Patset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#string-map" title="String map" class="md-nav__link">
+    String map
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-write-a-policy-configuration" title="How to write a policy configuration" class="md-nav__link">
+    How to write a policy configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sample-policy-configurations" title="Sample policy configurations" class="md-nav__link">
+    Sample policy configurations
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#responder-policy-configuration" title="Responder policy configuration" class="md-nav__link">
+    Responder policy configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#policy-with-audit-log-enabled" title="Policy with audit log enabled" class="md-nav__link">
+    Policy with audit log enabled
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-policy-configurations" title="Multiple policy configurations" class="md-nav__link">
+    Multiple policy configurations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-articles" title="Related articles" class="md-nav__link">
+    Related articles
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9">
+    
+    <label class="md-nav__link" for="nav-9">
+      Certificate management
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-9">
+        Certificate management
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../certificate-management/tls-certificate-handling-multiple-ingress/" title="TLS certificate handling for multiple Ingress" class="md-nav__link">
+      TLS certificate handling for multiple Ingress
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../certificate-management/tls-certificate-handling/" title="TLS certificates in Citrix Ingress Controller" class="md-nav__link">
+      TLS certificates in Citrix Ingress Controller
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9-3" type="checkbox" id="nav-9-3">
+    
+    <label class="md-nav__link" for="nav-9-3">
+      Automated certificate management with cert-manager
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-9-3">
+        Automated certificate management with cert-manager
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../certificate-management/certificate/" title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../certificate-management/acme/" title="Deploy HTTPs web applications on K8s with CIC and Let’s Encrypt using cert-manager" class="md-nav__link">
+      Deploy HTTPs web applications on K8s with CIC and Let’s Encrypt using cert-manager
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../certificate-management/vault/" title="Deploy HTTPs web application on K8s with CIC and HashiCorp vault using cert-manager" class="md-nav__link">
+      Deploy HTTPs web application on K8s with CIC and HashiCorp vault using cert-manager
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-10" type="checkbox" id="nav-10">
+    
+    <label class="md-nav__link" for="nav-10">
+      Metrics
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-10">
+        Metrics
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../metrics/promotheus-grafana/" title="Integrate with Promotheus and Grafana" class="md-nav__link">
+      Integrate with Promotheus and Grafana
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../troubleshooting/" title="Troubleshooting" class="md-nav__link">
+      Troubleshooting
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../upgrade/" title="Upgrade" class="md-nav__link">
+      Upgrade
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-the-citrix-crd" title="Deploying the Citrix CRD" class="md-nav__link">
+    Deploying the Citrix CRD
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crd-attributes" title="CRD attributes" class="md-nav__link">
+    CRD attributes
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rewrite-policy" title="Rewrite policy" class="md-nav__link">
+    Rewrite policy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responder-policy" title="Responder policy" class="md-nav__link">
+    Responder policy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-log" title="Audit log" class="md-nav__link">
+    Audit log
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataset" title="Dataset" class="md-nav__link">
+    Dataset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patset" title="Patset" class="md-nav__link">
+    Patset
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#string-map" title="String map" class="md-nav__link">
+    String map
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-write-a-policy-configuration" title="How to write a policy configuration" class="md-nav__link">
+    How to write a policy configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sample-policy-configurations" title="Sample policy configurations" class="md-nav__link">
+    Sample policy configurations
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#responder-policy-configuration" title="Responder policy configuration" class="md-nav__link">
+    Responder policy configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#policy-with-audit-log-enabled" title="Policy with audit log enabled" class="md-nav__link">
+    Policy with audit log enabled
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-policy-configurations" title="Multiple policy configurations" class="md-nav__link">
+    Multiple policy configurations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-articles" title="Related articles" class="md-nav__link">
+    Related articles
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/citrix/citrix-k8s-ingress-controller-docs/edit/master/docs/crds/rewrite-responder.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="using-rewrite-and-responder-policies-in-kubernetes">Using Rewrite and Responder policies in Kubernetes</h1>
+<p>In kubernetes environment, to deploy specific layer 7 policies to handle scenarios such as, redirecting HTTP traffic to a specific URL, blocking a set of IP addresses to mitigate DDoS attacks, imposing HTTP to HTTPS and so on, requires you to add appropriate libraries within the microservices and manually configure the policies. Instead, you can use the Rewrite and Responder features provided by the Ingress Citrix ADC device to deploy these policies.</p>
+<p>Citrix provides Kubernetes <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions">CustomResourceDefinitions</a> (CRDs) that you can use along with Citrix Ingress Controller (CIC) and automate the configurations and deployment of these policies on the Citrix ADCs used as Ingress devices.</p>
+<p>The Rewrite and Responder CRD provided by Citrix is designed to expose a set of tools used in front-line Citrix ADCs. Using these functionalities you can rewrite the header and payload of ingress and egress HTTP traffic as well as respond to HTTP traffic on behalf of a microservice.</p>
+<p>Once you deploy the Rewrite and Responder CRD in the Kubernetes cluster. You can define extensive rewrite and responder policies using datasets, patsets, and string maps and also enable audit logs for statistics on the ingress device. For more information on rewrite and responder policy feature provided by Citrix ADC, see <a href="https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/rewrite.html">Rewrite policy</a> and <a href="https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/responder.html">Responder policy</a>.</p>
+<h2 id="deploying-the-citrix-crd">Deploying the Citrix CRD</h2>
+<p>The Citrix Rewrite and Responder CRD deployment YAML file (<code>rewrite-responder-policies-deployment.yaml</code>) is available at: <strong><em>&lt;\location-placeholder&gt;</em></strong>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Ensure that you do not modify the deployment YAML file.</p>
+</div>
+<p>Deploy the CRD, using the following command:</p>
+<pre class="codehilite"><code>root@master:~# kubectl create -f rewrite-responder-policies-deployment.yaml
+customresourcedefinition.apiextensions.k8s.io/rewritepolicies.citrix.com created</code></pre>
+
+
+<h2 id="crd-attributes">CRD attributes</h2>
+<p>The <strong>CRD</strong> provides attributes for various options required to define the rewrite and responder policies. Also, it provides attributes for dataset, patset, string map, and audit logs to use within the rewrite and responder policies. These CRD attributes correspond to <strong>Citrix ADC</strong> command and attribute respectively.</p>
+<h3 id="rewrite-policy">Rewrite policy</h3>
+<p>The following table lists the <strong>CRD</strong> attributes that you can use to define a rewrite policy. Also, the table lists the corresponding Citrix ADC command and attributes.</p>
+<table>
+<thead>
+<tr>
+<th><strong>CRD attribute</strong></th>
+<th><strong>Citrix ADC command</strong></th>
+<th><strong>Citrix ADC attribute</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rewrite-criteria</td>
+<td>Add rewrite policy</td>
+<td>rule</td>
+</tr>
+<tr>
+<td>default-action</td>
+<td>Add rewrite policy</td>
+<td>undefAction</td>
+</tr>
+<tr>
+<td>operation</td>
+<td>Add rewrite action</td>
+<td>type</td>
+</tr>
+<tr>
+<td>target</td>
+<td>Add rewrite action</td>
+<td>target</td>
+</tr>
+<tr>
+<td>modify-expression</td>
+<td>Add rewrite action</td>
+<td>stringBuilderExpr</td>
+</tr>
+<tr>
+<td>multiple-occurence-modify</td>
+<td>Add rewrite action</td>
+<td>Search</td>
+</tr>
+<tr>
+<td>additional-multiple-occurence-modify</td>
+<td>Add rewrite action</td>
+<td>RefineSearch</td>
+</tr>
+<tr>
+<td>Direction</td>
+<td>Bind lb vserver</td>
+<td>Type</td>
+</tr>
+</tbody>
+</table>
+<h3 id="responder-policy">Responder policy</h3>
+<p>The following table lists the <strong>CRD</strong> attributes that you can use to define a responder policy. Also, the table lists the corresponding Citrix ADC command and attributes.</p>
+<table>
+<thead>
+<tr>
+<th><strong>CRD attribute</strong></th>
+<th><strong>Citrix ADC command</strong></th>
+<th><strong>Citrix ADC attribute</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Redirect</td>
+<td>Add responder action</td>
+<td>Type (the value of type)</td>
+</tr>
+<tr>
+<td>url</td>
+<td>Add responder action</td>
+<td>Target</td>
+</tr>
+<tr>
+<td>redirect-status-code</td>
+<td>Add responder action</td>
+<td>responseStatusCode</td>
+</tr>
+<tr>
+<td>redirect-reason</td>
+<td>Add responder action</td>
+<td>reasonPhrase</td>
+</tr>
+<tr>
+<td>Respond-with</td>
+<td>Add responder action</td>
+<td>Type (the value of type)</td>
+</tr>
+<tr>
+<td>http-payload-string</td>
+<td>Add responder action</td>
+<td>Target</td>
+</tr>
+<tr>
+<td>Noop</td>
+<td>Add responder policy</td>
+<td>Action (the value of action)</td>
+</tr>
+<tr>
+<td>Reset</td>
+<td>Add responder policy</td>
+<td>Action (the value of action)</td>
+</tr>
+<tr>
+<td>Drop</td>
+<td>Add responder policy</td>
+<td>Action (the value of action)</td>
+</tr>
+<tr>
+<td>Respond-criteria</td>
+<td>Add responder policy</td>
+<td>Rule</td>
+</tr>
+<tr>
+<td>Default-action</td>
+<td>Add responder policy</td>
+<td>undefAction</td>
+</tr>
+</tbody>
+</table>
+<h3 id="audit-log">Audit log</h3>
+<p>The following table lists the <strong>CRD</strong> attributes provide to enable audit log within the rewrite or responder policies. Also, the table lists the corresponding Citrix ADC command and attributes.</p>
+<table>
+<thead>
+<tr>
+<th><strong>CRD attribute</strong></th>
+<th><strong>Citrix ADC command</strong></th>
+<th><strong>Citrix ADC attribute</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logexpression</td>
+<td>Add audit message action</td>
+<td>stringBuilderExpr</td>
+</tr>
+<tr>
+<td>Loglevel</td>
+<td>Add audit message action</td>
+<td>Loglevel</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dataset">Dataset</h3>
+<p>The following table lists the <strong>CRD</strong> attributes for dataset that you can use within the rewrite or responder policies. Also, the table lists the corresponding Citrix ADC command and attributes.</p>
+<table>
+<thead>
+<tr>
+<th><strong>CRD attribute</strong></th>
+<th><strong>Citrix ADC command</strong></th>
+<th><strong>Citrix ADC attribute</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>Add policy dataset</td>
+<td>Name</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>Add policy dataset</td>
+<td>Type</td>
+</tr>
+<tr>
+<td>Values</td>
+<td>Bind policy dataset</td>
+<td>Value</td>
+</tr>
+</tbody>
+</table>
+<h3 id="patset">Patset</h3>
+<table>
+<thead>
+<tr>
+<th><strong>CRD attribute</strong></th>
+<th><strong>Citrix ADC command</strong></th>
+<th><strong>Citrix ADC attribute</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>Add policy patset</td>
+<td>Name</td>
+</tr>
+<tr>
+<td>Values</td>
+<td>Bind policy patset</td>
+<td>string</td>
+</tr>
+</tbody>
+</table>
+<h3 id="string-map">String map</h3>
+<table>
+<thead>
+<tr>
+<th><strong>CRD attribute</strong></th>
+<th><strong>Citrix ADC command</strong></th>
+<th><strong>Citrix ADC attribute</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>Add policy stringmap</td>
+<td>Name</td>
+</tr>
+<tr>
+<td>Key</td>
+<td>Bind policy stringmap</td>
+<td>Key</td>
+</tr>
+<tr>
+<td>Value</td>
+<td>Bind policy stringmap</td>
+<td>Value</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-to-write-a-policy-configuration">How to write a policy configuration</h2>
+<p>After you have deployed the CRD provided by Citrix in the Kubernetes cluster, you can define the policy configuration in a<code>.yaml</code> file. In the <code>.yaml</code> file, use <code>rewritepolicy</code> in the <code>kind</code> field and based on your requirement add any of the following individual sections in <code>spec</code> for policy configuration.</p>
+<ul>
+<li><code>rewrite-policy</code> - To define rewrite policy configuration.</li>
+<li><code>responder-policy</code> - To define responder policy configuration.</li>
+<li><code>logpackets</code> - To enable audit logs.</li>
+<li><code>dataset</code> - To use dataset for extensive policy configuration.</li>
+<li><code>patset</code> - To use patset for extensive policy configuration.</li>
+<li><code>stringmaps</code> - To use string maps for extensive policy configuration.</li>
+</ul>
+<p>In these sections, you need to use the <a href="#crd-attributes">CRD attributes</a> provided for respective policy configuration (rewrite or responder) to define the policy.</p>
+<p>Also, in the <code>spec</code> you need to include a <code>rewrite-policies</code> section to specify the service or services to which the policy needs to be applied. For more information, see <a href="#sample-policy-configurations">Sample policy configurations</a>.</p>
+<p>After you deploy the <code>.yaml</code> file, the Citrix Ingress Controller (CIC) applies the policy configuration on the Ingress Citrix ADC device.</p>
+<blockquote>
+<p><strong>Points to note:</strong></p>
+<ul>
+<li>
+<p>If the CRD is associated with a <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/">namespace</a> then, by default, the policy is applied to the services associated with the namespace. For example, if you have the same service name associated with multiple namespaces, then the policy is applied to the service that belongs to the namespace associated with the CRD.</p>
+</li>
+<li>
+<p>If you have defined multiple policies in a single <code>.yaml</code> file then the first policy configuration defined in the file takes priority and the subsequent policy configurations is applied as per the sequence. If you have multiple policies defined in different files then the first policy configuration defined in the file that you deployed first takes priority.</p>
+</li>
+</ul>
+</blockquote>
+<p>Consider a scenario wherein you want to define a policy in Citrix ADC to rewrite all the incoming URLs to <code>new-url-for-the-application</code> and send it to the microservices. Create a <code>.yaml</code> file called <code>target-url-rewrite.yaml</code> and use the appropriate <a href="#crd-attributes">CRD attributes</a> to define the rewrite policy as follows:</p>
+<p><strong>target-url-rewrite.yaml:</strong></p>
+<pre class="codehilite"><code class="language-YAML">apiVersion: citrix.com/v1
+kind: rewritepolicy
+metadata:
+  name: targeturlrewrite
+spec:
+  rewrite-policies:
+    - servicenames:
+        - citrix-svc
+      logpackets:
+        logexpression: &quot;http.req.url&quot;
+        loglevel: INFORMATIONAL
+      rewrite-policy:
+        operation: replace
+        target: 'http.req.url'
+        modify-expression: '&quot;new-url-for-the-application&quot;'
+        comment: 'Target URL Rewrite - rewrite the url of the HTTP request'
+        direction: REQUEST
+        rewrite-criteria: 'http.req.is_valid'</code></pre>
+
+
+<p>After you have defined the policy configuration, deploy the <code>.yaml</code> file using the following command:</p>
+<pre class="codehilite"><code>root@master:demo#kubectl create -f target-url-rewrite.yaml</code></pre>
+
+
+<p>After you deploy the <code>.yaml</code> file, the Citrix Ingress Controller (CIC) applies the policy configuration on the Ingress Citrix ADC device.</p>
+<p>On the master node in the Kubernetes cluster, you can verify if the rewrite policy CRD is created on the CIC using the following command:</p>
+<pre class="codehilite"><code>root@master:~# kubectl logs citrixingresscontroller | grep -i 'SUCCESS\|FAILURE\|exception'</code></pre>
+
+
+<p>You can view an entry in the logs as shown in the following image:</p>
+<p><img alt="CIC confirmation" src="../../media/rewrite-responder-cic-confirm.png" /></p>
+<p>Also, you can verify if the configuration is applied on the Citrix ADC, do the following:</p>
+<ol>
+<li>
+<p>Log on to the Citrix ADC command-line.</p>
+</li>
+<li>
+<p>Use the following command to verify if the configuration is applied to the Citrix ADC:</p>
+<pre class="codehilite"><code>$ show run | grep `lb vserver`
+add lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http HTTP 0.0.0.0 0 -persistenceType NONE -lbMethod ROUNDROBIN -cltTimeout 180 -coment &quot;uid=67d18ffb-261e-11e9-aad9-8e30e16c8143.ver=1692325&quot;
+bind lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http k8s-citrix.default.80.k8s-citrix-svc.default.http
+bind lb vserver k8s-citrix.default.80.k8s-citrix-svc.default.http k8s-citrix.default.80.k8s-citrix-svc.default.http -policyname k8s_rwpolicy_crd_targeturlrewrite_0_default_1719072 -priority 1006 -gotoPriorityExpression END -type REQUEST</code></pre>
+
+
+<p>You can verify that the policy <code>k8s_rwpolicy_crd_targeturlrewrite_0_default_1719072</code> is bound to the load balancing virtual server.</p>
+</li>
+</ol>
+<h2 id="sample-policy-configurations">Sample policy configurations</h2>
+<h3 id="responder-policy-configuration">Responder policy configuration</h3>
+<p><strong>black-list-urls.yaml:</strong></p>
+<pre class="codehilite"><code class="language-YAML">apiVersion: citrix.com/v1
+kind: rewritepolicy
+metadata:
+  name: blacklisturls
+spec:
+  responder-policies:
+    - servicenames:
+        - citrix-svc
+      responder-policy:
+        respondwith:
+          http-payload-string: '&quot;HTTP/1.1 401 Access denied&quot;'
+        respond-criteria: 'http.req.url.equals_any(&quot;blacklistUrls&quot;)'
+        comment: 'Blacklist certain Urls'
+
+
+  patset:
+    - name: blacklistUrls
+      values:
+        - '/app1'
+        - '/app2'
+        - '/app3'</code></pre>
+
+
+<p>In this example, if Citrix ADC receives any URL that matches the <code>/app1</code>, <code>/app2</code>, or <code>/app3</code> strings defined in the <code>patset</code>, Citrix ADC blocks the URL.</p>
+<h3 id="policy-with-audit-log-enabled">Policy with audit log enabled</h3>
+<p><strong>black-list-urls-audit-log.yaml:</strong></p>
+<pre class="codehilite"><code class="language-YAML">apiVersion: citrix.com/v1
+kind: rewritepolicy
+metadata:
+  name: blacklisturls
+spec:
+  responder-policies:
+    - servicenames:
+        - citrix-svc
+      logpackets:
+        logexpression: &quot;http.req.url&quot;
+        loglevel: INFORMATIONAL
+      responder-policy:
+        respondwith:
+          http-payload-string: '&quot;HTTP/1.1 401 Access denied&quot;'
+        respond-criteria: 'http.req.url.equals_any(&quot;blacklistUrls&quot;)'
+        comment: 'Blacklist certain Urls'
+
+
+  patset:
+    - name: blacklistUrls
+      values:
+        - '/app1'
+        - '/app2'
+        - '/app3'</code></pre>
+
+
+<h3 id="multiple-policy-configurations">Multiple policy configurations</h3>
+<p>You can add multiple policy configurations in a single <code>.yaml</code> file and apply the policies to the Citrix ADC device. You need add separate sections for each policy configuration.</p>
+<p><strong>multi-policy-config.yaml:</strong></p>
+<pre class="codehilite"><code class="language-yaml">apiVersion: citrix.com/v1
+kind: rewritepolicy
+metadata:
+  name: multipolicy
+spec:
+  responder-policies:
+    - servicenames:
+        - citrix-svc
+      responder-policy:
+        redirect:
+          url: '&quot;www.citrix.com&quot;'
+        respond-criteria: 'client.ip.src.TYPECAST_text_t.equals_any(&quot;redirectIPs&quot;)'
+        comment: 'Redirect IPs to citrix.com'
+    - servicenames:
+        - citrix-svc
+      responder-policy:
+        redirect:
+          url: 'HTTP.REQ.HOSTNAME+http.req.url.MAP_STRING_DEFAULT_TO_KEY(&quot;modifyurls&quot;)'
+        respond-criteria: 'http.req.is_valid'
+        comment: 'modify specific URLs'
+
+  rewrite-policies:
+    - servicenames:
+        - citrix-svc
+      rewrite-policy:
+        operation: insert_http_header
+        target: 'sessionID'
+        modify-expression: '&quot;48592th42gl24456284536tgt2&quot;'
+        comment: 'insert SessionID in header'
+        direction: RESPONSE
+        rewrite-criteria: 'http.res.is_valid'
+
+
+
+  dataset:
+    - name: redirectIPs
+      type: ipv4
+      values:
+        - 1.1.1.1
+        - 2.2.2.2
+
+  stringmap:
+    - name: modifyurls
+      comment: Urls to be modified string
+      values:
+        - key: '&quot;/app1/&quot;'
+          value: '&quot;/internal-app1/&quot;'
+        - key: '&quot;/app2/&quot;'
+          value: '&quot;/internal-app2/&quot;'</code></pre>
+
+
+<p>The example contains two responder policies and a rewrite policy, based on these policies the Citrix ADC device performs the following:</p>
+<ul>
+<li>
+<p>Any client request to IP addresses defined in the <code>redirectIP</code> dataset, that is, <code>1.1.1.1</code> or <code>2.2.2.2</code> respectively, the request is redirected to <code>www.citrix.com</code>.</p>
+</li>
+<li>
+<p>Any incoming URL with strings provided in the <code>modifyurls</code> stringmap is modified to the value provided in the stringmap. For example, if the incoming URL has the string <code>/app1/</code> is modified to <code>/internal-app1/</code></p>
+</li>
+<li>
+<p>Adds a session ID as a new header in the response to the client.</p>
+</li>
+</ul>
+<h2 id="related-articles">Related articles</h2>
+<ul>
+<li>
+<p>Feature Documentation</p>
+<ul>
+<li>
+<p><a href="https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/rewrite.html">Citrix ADC Rewrite Feature Documentation</a></p>
+</li>
+<li>
+<p><a href="https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/responder.html">Citrix ADC Responder Feature Documentation</a></p>
+</li>
+</ul>
+</li>
+<li>
+<p>Developer Documentation</p>
+<ul>
+<li>
+<p><a href="https://developer-docs.citrix.com/projects/netscaler-command-reference/en/12.0/rewrite/rewrite-policy/rewrite-policy/">Citrix ADC Rewrite Policy</a></p>
+</li>
+<li>
+<p><a href="https://developer-docs.citrix.com/projects/netscaler-command-reference/en/12.0/rewrite/rewrite-action/rewrite-action/">Citrix ADC Rewrite Action</a></p>
+</li>
+<li>
+<p><a href="https://developer-docs.citrix.com/projects/netscaler-command-reference/en/12.0/responder/responder-policy/responder-policy/">Citrix ADC Responder Policy</a></p>
+</li>
+<li>
+<p><a href="https://developer-docs.citrix.com/projects/netscaler-command-reference/en/12.0/responder/responder-action/responder-action/">Citrix ADC Responder Action</a></p>
+</li>
+<li>
+<p><a href="https://developer-docs.citrix.com/projects/netscaler-command-reference/en/latest/audit/audit-messageaction/audit-messageaction/">Citrix ADC Audit Message Action</a></p>
+</li>
+<li>
+<p><a href="https://docs.citrix.com/en-us/netscaler/12/appexpert/pattern-sets-data-seta/configuring-data-sets.html">Citrix ADC Policy Dataset</a></p>
+</li>
+</ul>
+</li>
+</ul>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../../network/staticrouting/" title="Static routing" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Static routing
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../../certificate-management/tls-certificate-handling-multiple-ingress/" title="TLS certificate handling for multiple Ingress" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                TLS certificate handling for multiple Ingress
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 1999-2019 Citrix Systems, Inc. All rights reserved.  | <a href="http://www.citrix.com/about/legal/legal-notice.html">Terms of Use | <a href="#" onclick="event.preventDefault(); window.evidon.notice.showConsentTool();">Cookie Preferences</a></a></p>
+          </div>
+        
+      </div>
+      
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="../../assets/fonts/font-awesome.css">
+    
+      <a href="https://www.youtube.com/channel/UCiOupk9QF6jdk3EDKTHDykA" class="md-footer-social__link fa fa-youtube"></a>
+    
+      <a href="https://github.com/citrix" class="md-footer-social__link fa fa-github-alt"></a>
+    
+      <a href="https://twitter.com/citrixdeveloper" class="md-footer-social__link fa fa-twitter"></a>
+    
+      <a href="https://www.linkedin.com/company/citrix/" class="md-footer-social__link fa fa-linkedin"></a>
+    
+  </div>
+
+    </div>
+  </div>
+<script type="text/javascript">
+(function (id) {
+    function append(scriptid, url, async) {
+        var d = document, sn = 'script', f = d.getElementsByTagName(sn)[0];
+        if (!f) f = d.head;
+        var s = d.createElement(sn);
+        s.async = true;
+        s.id = scriptid;
+        s.src = url;
+        f.parentNode.insertBefore(s, f);
+    }
+
+    function getRootDomain() {
+        var parts = window.location.hostname.split('.');
+        if (parts.length === 2) rootDomain = parts[0];
+        else if (parts.length > 2) {
+          // see if the next to last value is a common tld
+          var part = parts[parts.length - 2];
+          if (part === 'com' || part === 'co') {
+            rootDomain = parts[parts.length - 3]; // go back one more
+          }
+          else {
+            rootDomain = part;
+          }
+        }
+
+      return rootDomain;
+    }
+
+    window.evidon = {};
+    window.evidon.id = id;
+    var cdn = '//c.evidon.com/', rootDomain = getRootDomain(), noticecdn = cdn + 'sitenotice/';
+    append('evidon-notice', noticecdn + 'evidon-sitenotice-tag.js', false);
+    append('evidon-location', cdn + 'geo/country.js', true);
+    append('evidon-themes', noticecdn + id + '/snthemes.js', true);
+    if (rootDomain) append('evidon-settings', noticecdn + id + '/' + rootDomain + '/settings.js', true);
+
+    window.evidon.priorConsentCallback = function () {
+        // add the tags which need to wait for prior consent
+        // here.  This should be all your advertising tags and
+        // probably most of your social and tracking tags.
+    }
+})(3010);
+</script>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.43ad2ac2.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      
+    
+  </body>
+</html>

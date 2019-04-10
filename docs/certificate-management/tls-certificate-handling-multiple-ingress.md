@@ -162,7 +162,7 @@ args:
 
    citrix
 
-- --ingress-default-secret
+- --default-ssl-certificate
 
    # <secret name>
    Colddrink-secret
@@ -356,7 +356,7 @@ args:
 
    citrix
 
-- --ingress-default-secret
+- --default-ssl-certificate
 
    # <secret name>
    Colddrink-secret
