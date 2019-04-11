@@ -65,7 +65,7 @@ spec:
 CIC allows you to use the certkeys that are already configured on the Citrix ADC. You must provide the details about the certificate using an annotation in the ingress definition. The general format for the annotation is:
 
 ```
-'ingress.citrix.com/preconfigured-certkey : '{"certs": [ {"name": <name>, ["type": "default|sni|ca"]} ] }'
+'ingress.citrix.com/preconfigured-certkey : '{"certs": [ {"name": "<name>," , "type": "default|sni|ca"]} ] }'
 ```
 
 You can provide details about multiple certificates as a list within the annotation. Also, you can define the way the certificate should be treated. In the following sample annotation, certkey1 is used as a non-SNI certificate and certkey2 is used as an SNI certificate:

@@ -1,20 +1,20 @@
-# Deploying Citrix Ingress Controller using Helm charts
+# Deploy Citrix Ingress Controller using Helm charts
 
 You can deploy Citrix Ingress Controller (CIC) in the following modes:
 
--  As a standalone pod in the Kubernetes cluster. Use this mode if you are controlling Citrix ADCs (Citrix ADC MPX or Citrix ADC VPX) outside the cluster. For example, with [dual-tier](../deployment-topologies.md#dual-tier-topology) topologies, or [single-tier](../deployment-topologies.md#single-tier-topology) topology where the single tier is a Citrix ADC MPX or VPX. 
+-  As a standalone pod in the Kubernetes cluster. Use this mode if you are controlling Citrix ADCs (Citrix ADC MPX or Citrix ADC VPX) outside the cluster. For example, with [dual-tier](../deployment-topologies.md#dual-tier-topology) topologies, or [single-tier](../deployment-topologies.md#single-tier-topology) topology where the single tier is a Citrix ADC MPX or VPX.
 
--  As a sidecar (in the same pod) with Citrix ADC CPX in the Kubernetes cluster. The sidecar controller is only responsible for the associated Citrix ADC CPX within the same pod. This mode is used in [dual-tier](../deployment-topologies.md#dual-tier-topology) or [cloud](../deployment-topologies.md#cloud-topology)) topologies.
+-  As a [sidecar](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/) (in the same pod) with Citrix ADC CPX in the Kubernetes cluster. The sidecar controller is only responsible for the associated Citrix ADC CPX within the same pod. This mode is used in [dual-tier](../deployment-topologies.md#dual-tier-topology) or [cloud](../deployment-topologies.md#cloud-topology)) topologies.
 
-The CIC [repo](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts) contains the [Helm](https://helm.sh/) charts of CIC that you can use to configure Citrix ADCs such as, VPX, MPX, or CPX in Kubernetes environment. The repo contains a directory called [stable](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable) that includes stable version of the charts that are created and tested by Citrix.
+The helm charts for CIC is available on [Helm Hub](https://hub.helm.sh).
 
-## Deploying CIC as a pod in the Kubernetes cluster
+## Deploy CIC as a standalone pod in the Kubernetes cluster
 
-Use the [citrix-k8s-ingress-controller](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable/citrix-k8s-ingress-controller) chart to run Citrix Ingress Controller (CIC) as a pod in your Kubernetes cluster. The chart deploys CIC as a pod in your Kubernetes cluster and configures the Citrix ADC VPX or MPX ingress device.
+Use the [citrix-k8s-ingress-controller](https://hub.helm.sh/charts/cic/citrix-k8s-ingress-controller) chart to run Citrix Ingress Controller (CIC) as a pod in your Kubernetes cluster. The chart deploys CIC as a pod in your Kubernetes cluster and configures the Citrix ADC VPX or MPX ingress device.
 
 ### Prerequisites
 
--  Determine the NS_IP IP address needed by the controller to communicate with the appliance. The IP address might be anyone of the following depending on the type of Citrix ADC deployment:
+-  Determine the NS_IP address needed by the controller to communicate with the appliance. The IP address might be anyone of the following depending on the type of Citrix ADC deployment:
 
     -  (Standalone appliances) NSIP - The management IP address of a standalone Citrix ADC appliance. For more information, see [IP Addressing in Citrix ADC](https://docs.citrix.com/en-us/citrix-adc/12-1/networking/ip-addressing.html).
 
@@ -43,7 +43,7 @@ Citrix Ingress Controller (CIC) configures the Citrix ADC using a system user ac
 -  Configure Virtual IP address (VIP)
 -  Check the status of the Citrix ADC appliance
 
-To create the system user account, do the following:
+**To create the system user account, perform the following:**
 
 1.  Log on to the Citrix ADC appliance. Perform the following:
     1.  Use an SSH client, such as PuTTy, to open an SSH connection to the Citrix ADC appliance.
@@ -69,65 +69,13 @@ To create the system user account, do the following:
 
         bind system user cic cic-policy 0
 
-**To deploy the [citrix-k8s-ingress-controller](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable/citrix-k8s-ingress-controller) chart, perform the following:**
+**To deploy CIC as a standalone pod:**
 
-Use the `helm install` command to install the [citrix-k8s-ingress-controller](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable/citrix-k8s-ingress-controller) chart.
+To deploy CIC as standalone pod, follow the instructions provided in the CIC [Helm Hub](https://hub.helm.sh/charts/cic/citrix-k8s-ingress-controller).
 
-For example:
+## Deploy CIC as a sidecar with Citrix ADC CPX in the Kubernetes cluster
 
-    helm install citrix-k8s-ingress-controller -set nsIP= <NSIP>,license.accept=yes,ingressClass=<ingressClassName>
+Use the [citrix-k8s-cpx-ingress-controller](https://hub.helm.sh/charts/cic/citrix-k8s-cpx-ingress-controller) chart to deploy a Citrix ADC CPX with CIC as a [sidecar](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/). The chart deploys a Citrix ADC CPX instance that is used for load balancing the North-South traffic to the microservices in your Kubernetes cluster and the sidecar CIC configures the Citrix ADC CPX.
 
-!!! note "Note"
-    By default the chart installs the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and role bindings.
+To deploy Citrix ADC CPX with CIC as a sidecar, follow the instruction provided in the CIC [Helm Hub](ttps://hub.helm.sh/charts/cic/citrix-k8s-cpx-ingress-controller).
 
-To configure the CIC when installing the chart, you need to pass CIC specific parameters in `helm install`. The following table lists the mandatory and optional parameters that you can use:
-
-!!! note "Note"
-    You can also use the [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/charts/stable/citrix-k8s-ingress-controller/values.yaml) to pass the parameters.
-
-| Parameters | Mandatory or Optional | Default value | Description |
-| --------- | --------------------- | ------------- | ----------- |
-| nsIP | Mandatory | N/A | The IP address of the Citrix ADC device. For details, see [Prerequisites](#prerequistes).
-| license.accept | Mandatory | no | Set `yes` to accept the CIC end user license agreement. |
-| image.repository | Mandatory | `quay.io/citrix/citrix-k8s-ingress-controller` | The repository of the CIC image |
-| image.tag | Mandatory | 1.1.1 | The CIC image tag. |
-| image.pullPolicy | Mandatory | Always | The CIC image pull policy. |
-| nsPort | Optional | 443 | The port used by CIC to communicate with Citrix ADC. You can port 80 for HTTP. |
-| nsProtocol | Optional | HTTPS | The protocol used by CIC to communicate with Citrix ADC. You can also use HTTP on port 80. |
-| logLevel | Optional | DEPUG | The loglevel to control the logs generated by CIC. The supported loglevels are: CRITICAL, ERROR, WARNING, INFO, and DEBUG. For more information, see [Log Levels](../configure/log-levels.md).|
-| kubernetesURL | Optional | N/A | The kube-apiserver url that CIC uses to register the events. If the value is not specified, CIC uses the [internal kube-apiserver IP address](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#accessing-the-api-from-a-pod). |
-| ingressClass | Optional | N/A | If multiple ingress load balancers are used to load balance different ingress resources. You can use this parameter to specify CIC to configure Citrix ADC associated with specific ingress class. |
-| name | Optional | N/A | Use the argument to specify the release name using which you want to install the chart. |
-| | | |For example: `helm install citrix-k8s-ingress-controller --name my-release --set nsIP= <NSIP>,license.accept=yes,ingressClass=<ingressClassName>`|
-| exporter.require=1.0 | Optional | N/A | Use the argument If you want to run the [Exporter for Citrix ADC Stats](https://github.com/citrix/netscaler-metrics-exporter) along with CIC to pull metrics for the Citrix ADC VPX or MPX|
-| | | | For example: `helm install citrix-k8s-ingress-controller --name my-release --set license.accept=yes,ingressClass=<ingressClassName>,exporter.require=1.0` |
-
-## Deploying CIC as a sidecar with Citrix ADC CPX
-
-Use the [citrix-k8s-cpx-ingress-controller](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable/citrix-k8s-cpx-ingress-controller) chart to deploy a Citrix ADC CPX with CIC as a sidecar. The chart deploys a Citrix ADC CPX instance that is used for load balancing the North-South traffic to the microservices in your Kubernetes cluster and the sidecar CIC configures the Citrix ADC CPX.
-
-Use the `helm install` command to install the [citrix-k8s-cpx-ingress-controller](https://github.com/citrix/citrix-k8s-ingress-controller/tree/master/charts/stable/citrix-k8s-cpx-ingress-controller) chart.
-
-!!! note
-    By default the chart installs the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and role bindings.
-
-To configure the CIC when installing the chart, you need to pass CIC specific parameters in `helm install`. The following table lists the mandatory and optional parameters that you can use:
-
-!!! tip
-    You can also use the [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/charts/stable/citrix-k8s-cpx-ingress-controller/values.yaml).
-
-| Parameters | Mandatory or Optional | Default value | Description |
-| ---------- | --------------------- | ------------- | ----------- |
-| license.accept | Mandatory | no | Set `yes` to accept the CIC end user license agreement. |
-| cpximage.repository | Mandatory | `quay.io/citrix/citrix-k8s-cpx-ingress` | The Citrix ADC CPX image repository. |
-| cpximage.tag | Mandatory | 12.1-51.16 | The Citrix ADC CPX image tag. |
-| cpximage.pullPolicy | Mandatory | Always | The Citrix ADC CPX image pull policy. |
-| cicimage.repository | Mandatory | `quay.io/citrix/citrix-k8s-ingress-controller` | The CIC image repository. |
-| cicimage.tag | Mandatory | 1.1.1 | The CIC image tag. |
-| cicimage.pullPolicy | Mandatory | Always | The CIC image pull policy. |
-| exporter.require=1.0 | Optional | N/A | Use the argument if you want to run the [Exporter for Citrix ADC Stats](https://github.com/citrix/netscaler-metrics-exporter) along with CIC to pull metrics for the Citrix ADC VPX or MPX|
-| exporter.image.repository | Optional | `quay.io/citrix/netscaler-metrics-exporter` | The Exporter for Citrix ADC Stats image repository. |
-| exporter.image.tag | Optional | v1.0.0 | The Exporter for Citrix ADC Stats image tag. |
-| exporter.image.pullPolicy | Optional | Always | The Exporter for Citrix ADC Stats image pull policy. |
-| exporter.ports.containerPort | Optional | 8888 | The Exporter for Citrix ADC Stats container port. |
-| ingressClass | Optional | N/A | If multiple ingress load balancers are used to load balance different ingress resources. You can use this parameter to specify CIC to configure Citrix ADC associated with specific ingress class. |
