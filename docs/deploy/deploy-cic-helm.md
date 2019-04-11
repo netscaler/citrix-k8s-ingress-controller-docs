@@ -30,7 +30,7 @@ Use the [citrix-k8s-ingress-controller](https://github.com/citrix/citrix-k8s-ing
 
 #### Create System User Account for CIC in Citrix ADC
 
-Citrix Ingress Controller (CIC) configures the Citrix ADC using a system user account of the Citrix ADC. The system user account should have certain privileges so that the CIC has permission configure the following on the Citrix ADC:
+Citrix Ingress Controller (CIC) configures the Citrix ADC using a system user account of the Citrix ADC. The system user account should have certain privileges so that the CIC has permission to configure the following on the Citrix ADC:
 
 -  Add, Delete, or View Content Switching (CS) virtual server
 -  Configure CS policies and actions
@@ -80,7 +80,7 @@ For example:
 !!! note "Note"
     By default the chart installs the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and role bindings.
 
-To configure the CIC as required, while installing the chart you need to pass CIC specific parameters in the `helm install`. The following table lists the mandatory and optional parameters that you can use:
+To configure the CIC when installing the chart, you need to pass CIC specific parameters in `helm install`. The following table lists the mandatory and optional parameters that you can use:
 
 !!! note "Note"
     You can also use the [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/charts/stable/citrix-k8s-ingress-controller/values.yaml) to pass the parameters.
@@ -111,7 +111,7 @@ Use the `helm install` command to install the [citrix-k8s-cpx-ingress-controller
 !!! note
     By default the chart installs the recommended [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) roles and role bindings.
 
-To configure the CIC as required, while installing the chart you need to pass CIC specific parameters in the `helm install`. The following table lists the mandatory and optional parameters that you can use:
+To configure the CIC when installing the chart, you need to pass CIC specific parameters in `helm install`. The following table lists the mandatory and optional parameters that you can use:
 
 !!! tip
     You can also use the [values.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/charts/stable/citrix-k8s-cpx-ingress-controller/values.yaml).

@@ -2,17 +2,17 @@
 
 Citrix ADCs can be combined in powerful and flexible topologies that complement organizational boundaries. Dual-tier deployments employ high-capacity hardware or virtualized Citrix ADCs (Citrix ADC MPX and VPX) in the first tier to offload security functions and implement relatively static organizational policies while segmenting control between network operators and Kubernetes operators.
 
-In Dual-tier deployments, the second tier is within the Kubernetes Cluster (using the Citrix ADC CPX) and is under control of the service owners. Hence balances the need for stability for network operators while allowing Kubernetes users to implement high-velocity changes. Single-tier topologies are highly suited to organizations that are confident in their ability to handle high rates of change.
+In Dual-tier deployments, the second tier is within the Kubernetes Cluster (using the Citrix ADC CPX) and is under control of the service owners. This setup provides stability for network operators, while allowing Kubernetes users to implement high-velocity changes. Single-tier topologies are suited to organizations that need to handle high rates of change.
 
 ## Single-Tier topology
 
-In a Single-Tier topology, Citrix ADC MPX or VPX devices proxy the traffic (North-South) from the clients to microservices inside the cluster. The Citrix Ingress Controller (CIC) is deployed as a pod in the Kubernetes cluster. The controller automates the configuration of Citrix ADCs (MPX or VPX) based on the changes to the microservices or the Ingress resources.
+In a Single-Tier topology, Citrix ADC MPX or VPX devices proxy the (North-South) traffic from the clients to microservices inside the cluster. The Citrix Ingress Controller (CIC) is deployed as a pod in the Kubernetes cluster. The controller automates the configuration of Citrix ADCs (MPX or VPX) based on the changes to the microservices or the Ingress resources.
 
 ![Single-tier](media/singletopology.png)
 
 ## Dual-Tier topology
 
-In Dual-Tier topology, Citrix ADC MPX or VPX devices in Tier-1 proxy the traffic (North-South) from the client to Citrix ADC CPXs in Tier-2. The Tier-2 Citrix ADC CPX then routes the traffic to the microservices in the Kubernetes cluster. The Citrix Ingress Controller deployed as a standalone pod configures the Tier-1 devices. And, the sidecar controller in one or more Citrix ADC CPX pods configures it's associated Citrix ADC CPX in the same pod.
+In Dual-Tier topology, Citrix ADC MPX or VPX devices in Tier-1 proxy the traffic (North-South) from the client to Citrix ADC CPXs in Tier-2. The Tier-2 Citrix ADC CPX then routes the traffic to the microservices in the Kubernetes cluster. The Citrix Ingress Controller deployed as a standalone pod configures the Tier-1 devices. And, the sidecar controller in one or more Citrix ADC CPX pods configures the associated Citrix ADC CPX in the same pod.
 
 ![Dual-tier](media/dualtier.png)
 
@@ -28,6 +28,6 @@ Kubernetes clusters in public clouds such as [Amazon Web Services (AWS)](https:/
 
 ## Using the Ingress ADC for East-West traffic
 
-When the Citrix ADC CPX is deployed inside the cluster as an Ingress, it can be used to proxy network traffic between microservices ("East-West") within the cluster. For this to work the target microservice needs to be deployed in [headless](https://kubernetes.io/docs/concepts/services-networking/service/#headless-services) mode to bypass [kube-proxy](https://kubernetes.io/docs/concepts/overview/components/#kube-proxy) so that you can benefit from the advanced ADC functionalities provided by Citrix ADC.  
+When the Citrix ADC CPX is deployed inside the cluster as an Ingress, it can be used to proxy network (East-West) traffic between microservices within the cluster. For this, the target microservice needs to be deployed in [headless](https://kubernetes.io/docs/concepts/services-networking/service/#headless-services) mode to bypass [kube-proxy](https://kubernetes.io/docs/concepts/overview/components/#kube-proxy), so that you can benefit from the advanced ADC functionalities provided by Citrix ADC.  
 
 ![Dual-tier-Hairpin-mode](media/dual-tier-topology-with-hairpin-E-W.png)
