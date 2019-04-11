@@ -1,4 +1,4 @@
-# Using Rewrite and Responder policies in Kubernetes
+# Use Rewrite and Responder policies in Kubernetes
 
 In kubernetes environment, to deploy specific layer 7 policies to handle scenarios such as, redirecting HTTP traffic to a specific URL, blocking a set of IP addresses to mitigate DDoS attacks, imposing HTTP to HTTPS and so on, requires you to add appropriate libraries within the microservices and manually configure the policies. Instead, you can use the Rewrite and Responder features provided by the Ingress Citrix ADC device to deploy these policies.
 
@@ -8,7 +8,7 @@ The Rewrite and Responder CRD provided by Citrix is designed to expose a set of 
 
 Once you deploy the Rewrite and Responder CRD in the Kubernetes cluster. You can define extensive rewrite and responder policies using datasets, patsets, and string maps and also enable audit logs for statistics on the ingress device. For more information on rewrite and responder policy feature provided by Citrix ADC, see [Rewrite policy](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/rewrite.html) and [Responder policy](https://docs.citrix.com/en-us/citrix-adc/12-1/appexpert/responder.html).
 
-## Deploying the Citrix CRD
+## Deploy the Citrix CRD
 
 The Citrix Rewrite and Responder CRD deployment YAML file: [rewrite-responder-policies-deployment.yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/crd/rewrite-responder-policies-deployment.yaml).
 

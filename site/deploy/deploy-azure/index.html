@@ -106,7 +106,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#citrix-adc-cpx-as-an-ingress-in-azure-kubernetes-engine" tabindex="1" class="md-skip">
+      <a href="#deploying-citrix-adc-cpx-as-an-ingress-device-in-a-azure-kubernetes-service-cluster" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -366,33 +366,46 @@
     Prerequisites
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploying-citrix-cpx-as-an-ingress-device-in-a-aks-cluster" title="Deploying Citrix CPX as an Ingress Device in a AKS Cluster" class="md-nav__link">
+    Deploying Citrix CPX as an Ingress Device in a AKS Cluster
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#deployment-models" title="Deployment models" class="md-nav__link">
-    Deployment models
+  <a href="#deployment-models" title="Deployment Models" class="md-nav__link">
+    Deployment Models
   </a>
   
     <nav class="md-nav">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#standalone-cpx-deployment" title="Standalone CPX deployment" class="md-nav__link">
-    Standalone CPX deployment
+  <a href="#deploying-a-standalone-citrix-cpx-as-the-ingress-device" title="Deploying a Standalone Citrix CPX as the Ingress Device" class="md-nav__link">
+    Deploying a Standalone Citrix CPX as the Ingress Device
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#high-availability-citrix-cpx-deployment" title="High availability Citrix CPX deployment" class="md-nav__link">
-    High availability Citrix CPX deployment
+  <a href="#deploying-citrix-cpx-for-high-availability" title="Deploying Citrix CPX for High Availability" class="md-nav__link">
+    Deploying Citrix CPX for High Availability
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#citrix-cpx-per-node-deployment" title="Citrix CPX per node deployment" class="md-nav__link">
-    Citrix CPX per node deployment
+  <a href="#deploying-citrix-cpx-per-node" title="Deploying Citrix CPX per Node" class="md-nav__link">
+    Deploying Citrix CPX per Node
   </a>
   
 </li>
@@ -491,7 +504,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../configure/logging.md" title="Logging" class="md-nav__link">
+    <a href="../../configure/logging/" title="Logging" class="md-nav__link">
       Logging
     </a>
   </li>
@@ -767,33 +780,46 @@
     Prerequisites
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploying-citrix-cpx-as-an-ingress-device-in-a-aks-cluster" title="Deploying Citrix CPX as an Ingress Device in a AKS Cluster" class="md-nav__link">
+    Deploying Citrix CPX as an Ingress Device in a AKS Cluster
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#deployment-models" title="Deployment models" class="md-nav__link">
-    Deployment models
+  <a href="#deployment-models" title="Deployment Models" class="md-nav__link">
+    Deployment Models
   </a>
   
     <nav class="md-nav">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#standalone-cpx-deployment" title="Standalone CPX deployment" class="md-nav__link">
-    Standalone CPX deployment
+  <a href="#deploying-a-standalone-citrix-cpx-as-the-ingress-device" title="Deploying a Standalone Citrix CPX as the Ingress Device" class="md-nav__link">
+    Deploying a Standalone Citrix CPX as the Ingress Device
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#high-availability-citrix-cpx-deployment" title="High availability Citrix CPX deployment" class="md-nav__link">
-    High availability Citrix CPX deployment
+  <a href="#deploying-citrix-cpx-for-high-availability" title="Deploying Citrix CPX for High Availability" class="md-nav__link">
+    Deploying Citrix CPX for High Availability
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#citrix-cpx-per-node-deployment" title="Citrix CPX per node deployment" class="md-nav__link">
-    Citrix CPX per node deployment
+  <a href="#deploying-citrix-cpx-per-node" title="Deploying Citrix CPX per Node" class="md-nav__link">
+    Deploying Citrix CPX per Node
   </a>
   
 </li>
@@ -822,43 +848,61 @@
                   <a href="https://github.com/citrix/citrix-k8s-ingress-controller-docs/edit/master/docs/deploy/deploy-azure.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="citrix-adc-cpx-as-an-ingress-in-azure-kubernetes-engine">Citrix ADC CPX as an Ingress in Azure Kubernetes Engine</h1>
-<p>This section explains the deployment of Citrix ADC CPX as an ingress in <a href="https://azure.microsoft.com/en-in/services/kubernetes-service/">Azure Kubernetes Engine (AKS)</a> in basic networking mode (kubenet). You can also configure kubernetes cluster in <a href="https://azure.microsoft.com/en-in/services/virtual-machines/">Azure VM</a> and then deploy Citrix ADC CPX.</p>
-<p>The procedure to deploy Citrix ADC CPX remains the same for both AKS and Azure VM. If you configure Kubernetes on Azure VM, then you need to deploy the CNI plug-in for the kubernetes cluster.</p>
+                <h1 id="deploying-citrix-adc-cpx-as-an-ingress-device-in-a-azure-kubernetes-service-cluster">Deploying Citrix ADC CPX as an Ingress Device in a Azure Kubernetes Service Cluster</h1>
+<p>This section explains how to deploy Citrix ADC CPX as an ingress device in a <a href="https://azure.microsoft.com/en-in/services/kubernetes-service/">Azure Kubernetes Service (AKS)</a> cluster with basic networking mode (kubenet). You can also configure the Kubernetes cluster on <a href="https://azure.microsoft.com/en-in/services/virtual-machines/">Azure VM</a> and then deploy Citrix ADC CPX as the ingress device.</p>
+<p>The procedure to deploy Citrix ADC CPX for both AKS and Azure VM is the same. However, if you are configuring Kubernetes on Azure VM you need to deploy the CNI plug-in for the Kubernetes cluster.</p>
 <h2 id="prerequisites">Prerequisites</h2>
-<p>Ensure you have a Kubernetes Cluster up and running.</p>
-<p>This section only explains deployment in Azure Kubernetes Engine in Basic Networking Mode.</p>
-<p>Ensure that the AKS is configured only in Basic Networking mode (kubenet) and not in Advanced Networking mode (Azure CNI)</p>
-<p>For more information, see <a href="https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/create-aks/README.md">Guide to create an AKS cluster</a> for any help in creating a Kubernetes cluster in AKS.</p>
-<p><strong>To deploy Citrix CPX as an Ingress:</strong></p>
+<p>You should complete the following tasks before performing the steps in the procedure.</p>
+<ul>
+<li>Ensure that you have a Kubernetes cluster up and running.</li>
+<li>Ensure that the AKS is configured in the basic networking mode (kubenet) and not in the advanced networking mode (Azure CNI).</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information on creating a Kubernetes cluster in AKS, see <a href="https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/create-aks/README.md">Guide to create an AKS cluster</a> .</p>
+</div>
+<h3 id="deploying-citrix-cpx-as-an-ingress-device-in-a-aks-cluster">Deploying Citrix CPX as an Ingress Device in a AKS Cluster</h3>
+<p>Perform the following steps to deploy Citrix CPX as an ingress device in a AKS cluster.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this procedure, Apache web server is used as the sample application.</p>
+</div>
 <ol>
 <li>
-<p>Create a sample application and expose it as service. In our example, let's use an apache web-server.</p>
+<p>Deploy the required application in your Kubernetes cluster and expose it as a service in your cluster using the following command.</p>
 <pre class="codehilite"><code>kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/apache.yaml</code></pre>
 
 
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this example, <code>apache.yaml</code> is used. You should use the specific YAML file for your application.</p>
+</div>
 </li>
 <li>
-<p>Create a Citrix CPX</p>
+<p>Deploy Citrix CPX as an ingress device in the cluster using the following command.</p>
 <pre class="codehilite"><code>kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/standalone_cpx.yaml</code></pre>
 
 
 </li>
 <li>
-<p>Create an ingress object using the following command:</p>
+<p>Create the ingress resource using the following command.</p>
 <pre class="codehilite"><code>kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/cpx_ingress.yaml</code></pre>
 
 
 </li>
 <li>
-<p>Expose the Citrix CPX as a service of type Load-balancer. Deploying the CPX service YAML file creates an Azure LB with an External IP for receiving traffic. This is supported in kubernetes from v1.10.0.</p>
+<p>Create a service of type LoadBalancer for accessing the Citrix CPX by using the following command.</p>
 <pre class="codehilite"><code>kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/cpx_service.yaml</code></pre>
 
 
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This command creates a load balancer with an external IP for receiving traffic. This is supported in kubernetes since v1.10.0.</p>
+</div>
 </li>
 <li>
-<p>After executing the command, wait for the load-balancer to create an external IP. View the details of the created services using the following command:</p>
-<pre class="codehilite"><code>kubectl gets svc</code></pre>
+<p>Verify the service and check whether the load balancer has created an external IP. Wait for some time if the external IP is not created.</p>
+<pre class="codehilite"><code>kubectl  get svc</code></pre>
 
 
 <table>
@@ -901,8 +945,8 @@
 </table>
 </li>
 <li>
-<p>Once the IP address is available, you can access your resources through the external IP address provided by the load-balancer.</p>
-<pre class="codehilite"><code>kubectl get svc</code></pre>
+<p>Once the  external IP for the load-balancer is available as follows, you can access your resources using the external IP for the load balancer.</p>
+<pre class="codehilite"><code>kubectl  get svc</code></pre>
 
 
 <table>
@@ -943,92 +987,103 @@
 </tr>
 </tbody>
 </table>
-</li>
-</ol>
-<p>The health check for the cloud load-balancer is obtained from the readinessProbe configured in the <a href="https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml">Citrix CPX deployment yaml</a> file. So if the health check fails for some reason, you need to check the readinessProbe configured for Citrix CPX.</p>
-<p>You can read further about <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes">readinessProbe</a> and <a href="https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/">external Load balancer</a></p>
-<p>After the External-IP is created in the service, you can do a curl to the external IP address using the host header <strong>citrix-ingress.com</strong></p>
-<pre class="codehilite"><code>curl http://&lt;External-ip-of-loadbalancer&gt;/ -H 'Host: citrix-ingress.com'</code></pre>
-
-
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For ease of deployment, the following deployment models are explained with an all-in-one manifest file that combines all the explained steps. You can modify the manifest to suit your application and configuration.</p>
+<p>The health check for the cloud load-balancer is obtained from the readinessProbe configured in the <a href="https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml">Citrix CPX deployment yaml</a> file. If the health check fails, you should check the readinessProbe configured for Citrix CPX.
+For more information, see <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes">readinessProbe</a> and <a href="https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/">external Load balancer</a>.</p>
 </div>
-<h2 id="deployment-models">Deployment models</h2>
-<p>The following are the deployment solutions for deploying CPX as an ingress device in AKS:</p>
+</li>
+<li>
+<p>Access the application using the following command.</p>
+<pre class="codehilite"><code>curl http://&lt;External-ip-of-loadbalancer&gt;/ -H 'Host: citrix-ingress.com</code></pre>
+
+
+</li>
+</ol>
+<h2 id="deployment-models">Deployment Models</h2>
+<p>You can use the following deployment solutions for deploying CPX as an ingress device in a AKS cluster.</p>
 <ul>
-<li>
-<p>Standalone Citrix CPX deployment</p>
-</li>
-<li>
-<p>High availability Citrix CPX deployment</p>
-</li>
-<li>
-<p>Citrix CPX per node deployment</p>
-</li>
+<li>Standalone Citrix CPX deployment</li>
+<li>High availability Citrix CPX deployment</li>
+<li>Citrix CPX per node deployment</li>
 </ul>
-<h3 id="standalone-cpx-deployment">Standalone CPX deployment</h3>
-<p>To deploy Citrix CPX as an Ingress in a standalone deployment model in AKS, you need to use Service Type as LoadBalancer which would create a Load-balancer in Azure cloud. This is supported in kubernetes since v1.10.0.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the ease of deployment, the deployment models in this section are explained with an all-in-one manifest file that combines the steps explained in the previous section. You can modify the manifest file to suit your application and configuration.</p>
+</div>
+<h3 id="deploying-a-standalone-citrix-cpx-as-the-ingress-device">Deploying a Standalone Citrix CPX as the Ingress Device</h3>
+<p>To deploy Citrix CPX as an Ingress device in a standalone deployment model in AKS, you should use the service type as LoadBalancer which would create a load balancer in the Azure cloud. This is supported in Kubernetes since v1.10.0.</p>
 <p><img alt="Azure_Standalone_CPX" src="../../media/Azure_Standalone_CPX.png" /></p>
+<p>Perform the following steps to deploy a stand alone Citrix CPX as the ingress device.</p>
 <ol>
 <li>
-<p>Execute the following command to create a Citrix CPX ingress with Citrix Ingress Controller as a sidecar in your Kubernetes cluster:</p>
+<p>Deploy a Citrix CPX ingress with inbuilt Citrix Ingress Controller in your Kubernetes cluster using the following command.</p>
 <pre class="codehilite"><code>kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one.yaml</code></pre>
 
 
 </li>
 <li>
-<p>To access the application:</p>
+<p>Access the application using the following command.</p>
 <pre class="codehilite"><code>curl http://&lt;External-ip-of-loadbalancer&gt;/ -H 'Host: citrix-ingress.com'</code></pre>
 
 
-<p>To delete the deployment, use the following command:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To delete the deployment, use the following command.</p>
 <pre class="codehilite"><code>kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one.yaml</code></pre>
 
 
+</div>
 </li>
 </ol>
-<h3 id="high-availability-citrix-cpx-deployment">High availability Citrix CPX deployment</h3>
-<p>In the standalone deployment of Citrix CPX as ingress, if the ingress device fails for some reason there would be a traffic outage for a few seconds. To avoid the disruption, instead of deploying a single Citrix CPX ingress, you can deploy two Citrix CPX ingress devices. So that if one Citix CPX fails, the other Citrix CPX is availble to handle the traffic until the failed Citrix CPX comes up.</p>
+<h3 id="deploying-citrix-cpx-for-high-availability">Deploying Citrix CPX for High Availability</h3>
+<p>In the standalone deployment of Citrix CPX as the ingress, if the ingress device fails for some reason there would be a traffic outage for a few seconds. To avoid this traffic disruption, you can deploy two Citrix CPX ingress devices instead of deploying a single Citrix CPX ingress device. In such deployments, even if one Citrix CPX fails the other Citrix CPX is available to handle the traffic till the failed Citrix CPX comes up.</p>
 <p><img alt="Azure_HA_CPX" src="../../media/Azure_HA_CPX.png" /></p>
+<p>Perform the following steps to deploy two Citrix CPX devices for high availability.</p>
 <ol>
 <li>
-<p>Execute the following command to create a CPX ingress with Citrix Ingress Controller as a sidecar in your kubernetes cluster:</p>
+<p>Deploy Citrix CPX ingress devices for high availability in your Kubernetes cluster by using the following command.</p>
 <pre class="codehilite"><code>kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-ha.yaml</code></pre>
 
 
 </li>
 <li>
-<p>To access the application:</p>
+<p>Access the application using the following command.</p>
 <pre class="codehilite"><code>curl http://&lt;External-ip-of-loadbalancer&gt;/ -H 'Host: citrix-ingress.com'</code></pre>
 
 
-<p>To delete the deployment, use the following command:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To delete the deployment, use the following command.</p>
 <pre class="codehilite"><code>kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-ha.yaml</code></pre>
 
 
+</div>
 </li>
 </ol>
-<h3 id="citrix-cpx-per-node-deployment">Citrix CPX per node deployment</h3>
-<p>In certain cases the cluster nodes are added and removed from the cluster. Hence, Citrix CPX can also be deployed as daemonsets so that every node has a Citrix CPX ingress in them. This is much more reliable solution than deploying two Citrix CPX as ingress devices when the traffic is high.</p>
+<h3 id="deploying-citrix-cpx-per-node">Deploying Citrix CPX per Node</h3>
+<p>In some cases where cluster nodes are added and removed from the cluster, Citrix CPX can also be deployed as daemonsets so that every node will have a Citirx CPX ingress in them. This is a much more reliable solution than deploying two Citrix CPX devices as ingress devices when the traffic is high.</p>
 <p><img alt="Azure_CPX_per_node" src="../../media/Azure_CPX_per_node.png" /></p>
+<p>Perform the followings steps to deploy Citrix CPX as a ingress device on each node in the cluster. </p>
 <ol>
 <li>
-<p>Execute the following command to create a CPX ingress with in built Citrix Ingress Controller in your kubernetes cluster:</p>
+<p>Deploy Citrix CPX ingress device in each node of your Kubernetes cluster by using the following command.</p>
 <pre class="codehilite"><code>kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-reliable.yaml</code></pre>
 
 
 </li>
 <li>
-<p>To access the application:</p>
-<pre class="codehilite"><code>curl http://&lt;External-ip-of-loadbalancer&gt;/ -H 'Host: citrix-ingress.com'</code></pre>
+<p>Access the application by using the following command.</p>
+<pre class="codehilite"><code>curl http://&lt;External-ip-of-loadbalancer&gt;/ -H 'Host: citrix-ingress.com</code></pre>
 
 
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>To delete the deployment, use the following command:</p>
 <pre class="codehilite"><code>kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-reliable.yaml</code></pre>
 
 
+</div>
 </li>
 </ol>
                 

@@ -1,6 +1,6 @@
 # Configure Static Routing
 
-One of the ways to achieve network connectivity between pods and Citrix ADC instance is to configure routes on the Citrix ADC instance to the overlay network.
+One of the ways to achieve network connectivity between pods and Citrix ADC VPX or MPX instance outside the Kubernetes cluster is to configure routes on the Citrix ADC instance to the overlay network.
 
 You can either do this manually or Citrix Ingress Controller (CIC) provides an option to automatically configure the network.
 
@@ -18,7 +18,6 @@ Perform the following:
         podNetwork: 10.244.0.0/24    gateway: 10.106.162.108
         podNetwork: 10.244.2.0/24    gateway: 10.106.162.109
         podNetwork: 10.244.1.0/24    gateway: 10.106.162.106
-
 
 1.  Log on to the Citrix ADC instance.
 

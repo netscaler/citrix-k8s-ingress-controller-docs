@@ -177,7 +177,7 @@ imagePullPolicy: Always
 !!! note "Note"
     You must provide a default secret name in the yaml.
 
-## Setting up HTTP(S) Load Balancing with Ingress
+## Set up HTTP(S) Load Balancing with Ingress
 
 **TLS**:
 

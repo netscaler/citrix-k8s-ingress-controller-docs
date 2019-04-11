@@ -428,7 +428,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../logging.md" title="Logging" class="md-nav__link">
+    <a href="../logging/" title="Logging" class="md-nav__link">
       Logging
     </a>
   </li>
@@ -724,7 +724,7 @@
 <tr>
 <td>ingress.citrix.com/frontend-ip</td>
 <td>IP address</td>
-<td>Use this annotation to customize the virtual IP address (VIP). This IP address is configured in Citrix ADC as VIP</td>
+<td>Use this annotation to customize the virtual IP address (VIP). This IP address is configured in Citrix ADC as VIP. The annotation is mandatory if you are using Citrix ADC VPX or MPX. <strong>Note:</strong> Do not use the annotation if you want to use the Citrix ADC IP address as VIP.</td>
 <td>Citrix ADC IP address is used as VIP.</td>
 </tr>
 <tr>
@@ -800,7 +800,7 @@
 <td></td>
 </tr>
 <tr>
-<td>ingress.citrix.com/lbvserver, ingress.citrix.com/lbvserver</td>
+<td>ingress.citrix.com/lbvserver</td>
 <td>In JSON form, settings for lb virtual server or service group</td>
 <td>This provides smart annotation capability. Using this, an advanced user (who has knowledge of NetScaler LB virtual server and Service group options) can directly apply them. Values must be in JSON format. For each backend app in the ingress, provide key value pair. Key name should match with the corresponding CLI name</td>
 <td>Default options provided by Citrix ADC</td>

@@ -476,7 +476,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../configure/logging.md" title="Logging" class="md-nav__link">
+    <a href="../configure/logging/" title="Logging" class="md-nav__link">
       Logging
     </a>
   </li>
@@ -796,12 +796,12 @@
                 
                 <h1 id="deployment-topologies">Deployment topologies</h1>
 <p>Citrix ADCs can be combined in powerful and flexible topologies that complement organizational boundaries. Dual-tier deployments employ high-capacity hardware or virtualized Citrix ADCs (Citrix ADC MPX and VPX) in the first tier to offload security functions and implement relatively static organizational policies while segmenting control between network operators and Kubernetes operators.</p>
-<p>In Dual-tier deployments, the second tier is within the Kubernetes Cluster (using the Citrix ADC CPX) and is under control of the service owners. Hence balances the need for stability for network operators while allowing Kubernetes users to implement high-velocity changes. Single-tier topologies are highly suited to organizations that are confident in their ability to handle high rates of change.</p>
+<p>In Dual-tier deployments, the second tier is within the Kubernetes Cluster (using the Citrix ADC CPX) and is under control of the service owners. This setup provides stability for network operators, while allowing Kubernetes users to implement high-velocity changes. Single-tier topologies are suited to organizations that need to handle high rates of change.</p>
 <h2 id="single-tier-topology">Single-Tier topology</h2>
-<p>In a Single-Tier topology, Citrix ADC MPX or VPX devices proxy the traffic (North-South) from the clients to microservices inside the cluster. The Citrix Ingress Controller (CIC) is deployed as a pod in the Kubernetes cluster. The controller automates the configuration of Citrix ADCs (MPX or VPX) based on the changes to the microservices or the Ingress resources.</p>
+<p>In a Single-Tier topology, Citrix ADC MPX or VPX devices proxy the (North-South) traffic from the clients to microservices inside the cluster. The Citrix Ingress Controller (CIC) is deployed as a pod in the Kubernetes cluster. The controller automates the configuration of Citrix ADCs (MPX or VPX) based on the changes to the microservices or the Ingress resources.</p>
 <p><img alt="Single-tier" src="../media/singletopology.png" /></p>
 <h2 id="dual-tier-topology">Dual-Tier topology</h2>
-<p>In Dual-Tier topology, Citrix ADC MPX or VPX devices in Tier-1 proxy the traffic (North-South) from the client to Citrix ADC CPXs in Tier-2. The Tier-2 Citrix ADC CPX then routes the traffic to the microservices in the Kubernetes cluster. The Citrix Ingress Controller deployed as a standalone pod configures the Tier-1 devices. And, the sidecar controller in one or more Citrix ADC CPX pods configures it's associated Citrix ADC CPX in the same pod.</p>
+<p>In Dual-Tier topology, Citrix ADC MPX or VPX devices in Tier-1 proxy the traffic (North-South) from the client to Citrix ADC CPXs in Tier-2. The Tier-2 Citrix ADC CPX then routes the traffic to the microservices in the Kubernetes cluster. The Citrix Ingress Controller deployed as a standalone pod configures the Tier-1 devices. And, the sidecar controller in one or more Citrix ADC CPX pods configures the associated Citrix ADC CPX in the same pod.</p>
 <p><img alt="Dual-tier" src="../media/dualtier.png" /></p>
 <h2 id="cloud-topology">Cloud topology</h2>
 <p>Kubernetes clusters in public clouds such as <a href="https://aws.amazon.com">Amazon Web Services (AWS)</a>, <a href="https://cloud.google.com">Google Cloud</a>, and <a href="https://azure.microsoft.com/en-in/">Microsoft Azure</a> can use their native load balancing services such as, <a href="https://aws.amazon.com/elasticloadbalancing/">AWS Elastic Load Balancing</a>, <a href="https://cloud.google.com/load-balancing/">Google Cloud Load Balancing</a>, and <a href="https://azure.microsoft.com/en-in/services/load-balancer/">Microsoft Azure NLB</a> as the first (relatively static) tier of load balancing to a second tier of Citrix ADC CPX. Citrix ADC CPX operates inside the Kubernetes cluster with the sidecar Ingress controller. The Kubernetes clusters can be self-hosted or managed by the cloud provider (for example, <a href="https://aws.amazon.com/eks/">AWS EKS</a>, <a href="https://cloud.google.com/kubernetes-engine/">Google GKE</a> and <a href="https://docs.microsoft.com/en-us/azure/aks/">Azure AKS</a>) while using the Citrix ADC CPX as the Ingress. If the cloud-based Kubernetes cluster is self-hosted or self-managed, the Citrix ADC VPX can be used as the first tier in a Dual-tier topology.</p>
@@ -810,7 +810,7 @@
 <p><strong>Cloud deployment with Cloud LB in tier-1:</strong>
 <img alt="Cloud deployment with CLB in tier-1" src="../media/cloud-deploy-clb-tier-1.png" /></p>
 <h2 id="using-the-ingress-adc-for-east-west-traffic">Using the Ingress ADC for East-West traffic</h2>
-<p>When the Citrix ADC CPX is deployed inside the cluster as an Ingress, it can be used to proxy network traffic between microservices ("East-West") within the cluster. For this to work the target microservice needs to be deployed in <a href="https://kubernetes.io/docs/concepts/services-networking/service/#headless-services">headless</a> mode to bypass <a href="https://kubernetes.io/docs/concepts/overview/components/#kube-proxy">kube-proxy</a> so that you can benefit from the advanced ADC functionalities provided by Citrix ADC.  </p>
+<p>When the Citrix ADC CPX is deployed inside the cluster as an Ingress, it can be used to proxy network (East-West) traffic between microservices within the cluster. For this, the target microservice needs to be deployed in <a href="https://kubernetes.io/docs/concepts/services-networking/service/#headless-services">headless</a> mode to bypass <a href="https://kubernetes.io/docs/concepts/overview/components/#kube-proxy">kube-proxy</a>, so that you can benefit from the advanced ADC functionalities provided by Citrix ADC.  </p>
 <p><img alt="Dual-tier-Hairpin-mode" src="../media/dual-tier-topology-with-hairpin-E-W.png" /></p>
                 
                   

@@ -1,4 +1,4 @@
-# Deploying Citrix ADC CPX as an Ingress Device in a Azure Kubernetes Service Cluster
+# Deploy Citrix ADC CPX as an Ingress Device in a Azure Kubernetes Service Cluster
 
 This section explains how to deploy Citrix ADC CPX as an ingress device in a [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) cluster with basic networking mode (kubenet). You can also configure the Kubernetes cluster on [Azure VM](https://azure.microsoft.com/en-in/services/virtual-machines/) and then deploy Citrix ADC CPX as the ingress device.
 
@@ -14,7 +14,7 @@ You should complete the following tasks before performing the steps in the proce
 !!! note "Note"
     For more information on creating a Kubernetes cluster in AKS, see [Guide to create an AKS cluster](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/create-aks/README.md) .
 
-### Deploying Citrix CPX as an Ingress Device in a AKS Cluster
+### Deploy Citrix CPX as an Ingress Device in a AKS Cluster
 
 Perform the following steps to deploy Citrix CPX as an ingress device in a AKS cluster.
 
@@ -82,7 +82,7 @@ You can use the following deployment solutions for deploying CPX as an ingress d
 !!! note "Note"
     For the ease of deployment, the deployment models in this section are explained with an all-in-one manifest file that combines the steps explained in the previous section. You can modify the manifest file to suit your application and configuration.
 
-### Deploying a Standalone Citrix CPX as the Ingress Device
+### Deploy a Standalone Citrix CPX as the Ingress Device
 
 To deploy Citrix CPX as an Ingress device in a standalone deployment model in AKS, you should use the service type as LoadBalancer which would create a load balancer in the Azure cloud. This is supported in Kubernetes since v1.10.0.
 
@@ -103,7 +103,7 @@ Perform the following steps to deploy a stand alone Citrix CPX as the ingress de
 
             kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one.yaml
 
-### Deploying Citrix CPX for High Availability
+### Deploy Citrix CPX for High Availability
 
 In the standalone deployment of Citrix CPX as the ingress, if the ingress device fails for some reason there would be a traffic outage for a few seconds. To avoid this traffic disruption, you can deploy two Citrix CPX ingress devices instead of deploying a single Citrix CPX ingress device. In such deployments, even if one Citrix CPX fails the other Citrix CPX is available to handle the traffic till the failed Citrix CPX comes up.
 
@@ -124,7 +124,7 @@ Perform the following steps to deploy two Citrix CPX devices for high availabili
 
             kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-ha.yaml
 
-### Deploying Citrix CPX per Node
+### Deploy Citrix CPX per Node
 
 In some cases where cluster nodes are added and removed from the cluster, Citrix CPX can also be deployed as daemonsets so that every node will have a Citirx CPX ingress in them. This is a much more reliable solution than deploying two Citrix CPX devices as ingress devices when the traffic is high.
 

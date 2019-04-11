@@ -1,4 +1,4 @@
-# Deploying HTTPS web application on Kubernetes with Citrix Ingress Controller and Hashicorp Vault using cert-manager
+# Deploy HTTPS web application on Kubernetes with Citrix Ingress Controller and Hashicorp Vault using cert-manager
 
 This topic provides a sample workflow that uses HashiCorp Vault as self-signed CA to automate TLS certificate provisioning, revocation, and renewal for ingress resources deployed with Citrix ingress controller using cert-manager.
 
@@ -133,8 +133,7 @@ Perform the following steps to deploy a sample web application.
         NAME    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
         kuard   ClusterIP   10.103.49.171   <none>        80/TCP    13s
 
-
-5.  Expose this service to outside world by creating an Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server.
+1.  Expose this service to outside world by creating an Ingress that is deployed on Citrix ADC CPX or VPX as Content switching virtual server.
 
     !!! note "Note"
         Ensure that you change `kubernetes.io/ingress.class` to your ingress class on which CIC is started.
@@ -154,7 +153,6 @@ Perform the following steps to deploy a sample web application.
                   serviceName: kuard
                   servicePort: 80
   
-
     !!! info "Important"
         Change the value of `spec.rules.host` to the domain that you control. Ensure that a DNS entry exists to route the traffic to Citrix ADC CPX or VPX.
 

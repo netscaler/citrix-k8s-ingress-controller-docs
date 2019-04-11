@@ -1,4 +1,4 @@
-# Deploying HTTPS web application on Kubernetes with Citrix Ingress Controller and Let`s Encrypt using cert-manager
+# Deploy HTTPS web application on Kubernetes with Citrix Ingress Controller and Let`s Encrypt using cert-manager
 
 [Let's Encrypt](https://letsencrypt.org/docs/) and the ACME (Automatic Certificate Management Environment) protocol enables you to set up an HTTPS server and automatically obtain a browser-trusted certificate. To get a certificate for your website’s domain from Let’s Encrypt, you have to demonstrate control over the domain. Currently there are two different challenge types, http-01 and dns-01.
 

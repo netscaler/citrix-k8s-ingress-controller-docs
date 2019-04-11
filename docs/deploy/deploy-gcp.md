@@ -1,4 +1,4 @@
-# Deploying Citrix ADC CPX as an Ingress device in Google Cloud Platform
+# Deploy Citrix ADC CPX as an Ingress device in Google Cloud Platform
 
 This section explains how to deploy Citrix ADC CPX as an ingress device in [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) and [Google Compute Engine (GCE)](https://cloud.google.com/compute/) clusters. The procedure to deploy the Citrix ADC CPX is the same for both Google Kubernetes Engine (GKE) and Google Compute Engine (GCE). However, if you configure Kubernetes on Google Compute Engine (GCE), then you need to deploy the CNI plug-in for the Kubernetes cluster.
 
@@ -18,7 +18,7 @@ You can get your Google account details using the following command.
 
     gcloud info | grep Account
 
-## Deploying Citrix ADC CPX as an ingress device in Google Cloud Platform
+## Deploy Citrix ADC CPX as an ingress device in Google Cloud Platform
 
 1.  Deploy the required application in your Kubernetes cluster and expose it as a service in your cluster using the following command.
 
@@ -63,7 +63,7 @@ You can get your Google account details using the following command.
     |kubernetes| ClusterIP| 10.7.240.1|none|443/TCP|22h|`
 
     !!! note "Note"
-        The health check for the cloud load-balancer is obtained from the readinessProbe configured in the [Citrix ADC CPX deployment YAML](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file. If the health check fails, you should check the readinessProbe configured for Citrix ADC CPX. 
+        The health check for the cloud load-balancer is obtained from the readinessProbe configured in the [Citrix ADC CPX deployment YAML](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file. If the health check fails, you should check the readinessProbe configured for Citrix ADC CPX.
         For more information, see [readinessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes) and [external Load balancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/).
 
 1.  Access the application using the following command.
@@ -81,7 +81,7 @@ You can use the following deployment solutions for deploying CPX as an ingress d
 !!! note "Note"
     For the ease of deployment, the deployment models in this section are explained with an all-in-one manifest file that combines the steps explained in the previous section. You can modify the manifest file to suit your application and configuration.
 
-### Deploying a standalone Citrix ADC CPX as the ingress device
+### Deploy a standalone Citrix ADC CPX as the Ingress device
 
 To deploy Citrix ADC CPX as an Ingress in a standalone deployment model in GCP, you should use the Service Type as LoadBalancer. This step creates a load balancer in the Google cloud.
 
@@ -100,7 +100,7 @@ To deploy Citrix ADC CPX as an Ingress in a standalone deployment model in GCP, 
 
             kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one.yaml
 
-### Deploying Citrix ADC CPX for high availability
+### Deploy Citrix ADC CPX for high availability
 
 In the standalone deployment of Citrix ADC CPX as ingress, if the ingress device fails, there would be a traffic outage for a few seconds. To avoid this traffic disruption, you can deploy two Citrix ADC CPX ingress devices instead of deploying a single Citrix ADC CPX ingress device. In such deployments, even if one Citrix ADC CPX fails the other Citrix ADC CPX is available to handle the traffic until the failed Citrix ADC CPX comes up.
 
@@ -119,7 +119,7 @@ In the standalone deployment of Citrix ADC CPX as ingress, if the ingress device
 
             kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/gcp/manifest/all-in-one-ha.yaml
 
-### Deploying Citrix ADC CPX per node
+### Deploy Citrix ADC CPX per node
 
 Sometimes when cluster nodes are added and removed from the cluster, CPX can also be deployed as DaemonSets. This deployment ensures that every node has a CPX ingress device in it. When the traffic is high, such a deployment is a much more reliable solution than deploying two Citrix ADC CPX devices as ingress devices.
 

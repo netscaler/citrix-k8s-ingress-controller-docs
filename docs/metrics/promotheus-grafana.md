@@ -1,4 +1,4 @@
-# Viewing metrics of Citrix ADCs in Kubernetes
+# View metrics of Citrix ADCs in Kubernetes
 
 You can use the [Citrix ADC metrics exporter](https://github.com/citrix/netscaler-metrics-exporter) and [Prometheus-Operator](https://github.com/coreos/prometheus-operator) to monitor Citrix ADC VPX or CPX ingress devices and Citrix ADC CPX (east-west) devices.
 
@@ -6,7 +6,7 @@ You can use the [Citrix ADC metrics exporter](https://github.com/citrix/netscale
 
 Citrix ADC metrics exporter is a simple server that collects Citrix ADC stats and exports them to Prometheus using `HTTP`. You can then add Prometheus as a data source to Grafana and graphically view the Citrix ADC stats. For more information see, [Citrix ADC metrics exporter](https://github.com/citrix/netscaler-metrics-exporter).
 
-## Launching prometheus-operator
+## Launch prometheus-operator
 
 Prometheus Operator has an expansive method of monitoring services on Kubernetes. To get started, this topic uses `kube-prometheus` and its manifest files. The manifest files help you to deploy a basic working model. Deploy the Prometheus Operator in your Kubernetes environment using the following commands:
 
@@ -81,7 +81,7 @@ To apply these changes into the kubernetes cluster use the following command:
 
     kubectl apply -f grafana-service.yaml
 
-## Configuring Citrix ADC metrics exporter
+## Configure Citrix ADC metrics exporter
 
 This topic describes how to integrate the [Citrix ADC metrics exporter](https://github.com/citrix/netscaler-metrics-exporter) with Citrix ADC VPX or CPX ingress or Citrix ADC CPX (east-west) devices.
 
@@ -278,7 +278,7 @@ spec:
     - default
 ```
 
-### Viewing the metrics in Grafana
+### View the metrics in Grafana
 
 The Citrix ADC instances which were detected for monitoring appears in the `Targets` page of the prometheus container. It can be accessed using `http://<k8s_cluster_ip>:<prometheus_nodeport>/targets` and looks like the following image:
 

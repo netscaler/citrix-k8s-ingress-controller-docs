@@ -77,7 +77,7 @@ nav:
   - Configure:
     - Annotations: configure/annotations.md
     - Ingress class: configure/ingress-classes.md
-    - Logging: configure/logging.md
+    - Log levels: configure/log-levels.md
   - Network:
     - Static routing: network/staticrouting.md
   - CRDs: 
