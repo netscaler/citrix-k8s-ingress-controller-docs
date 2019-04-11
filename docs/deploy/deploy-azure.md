@@ -11,21 +11,21 @@ You should complete the following tasks before performing the steps in the proce
 -  Ensure that you have a Kubernetes cluster up and running.
 -  Ensure that the AKS is configured in the basic networking mode (kubenet) and not in the advanced networking mode (Azure CNI).
 
-!!! note “Note”
+!!! note "Note"
     For more information on creating a Kubernetes cluster in AKS, see [Guide to create an AKS cluster](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/create-aks/README.md).
 
 ## Deploy Citrix ADC CPX as an ingress device in an AKS cluster
 
 Perform the following steps to deploy Citrix ADC CPX as an ingress device in an AKS cluster.
 
-!!! note “Note”
+!!! note "Note"
     In this procedure, Apache web server is used as the sample application.
 
 1.  Deploy the required application in your Kubernetes cluster and expose it as a service in your cluster using the following command.
 
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/apache.yaml
 
-    !!! note “Note”
+    !!! note "Note"
         In this example, `apache.yaml` is used. You should use the specific YAML file for your application.
 
 1.  Deploy Citrix ADC CPX as an ingress device in the cluster using the following command.
@@ -62,8 +62,10 @@ Perform the following steps to deploy Citrix ADC CPX as an ingress device in an 
     |cpx-ingress |LoadBalancer|10.0.37.255|  EXTERNAL-IP CREATED| 80:32258/TCP,443:32084/TCP |  3m|
     |kubernetes|    ClusterIP|10.0.0.1 |none| 443/TCP| 22h|
 
-    !!! note “Note”  
-        The health check for the cloud load-balancer is obtained from the readinessProbe configured in the [Citrix ADC CPX deployment yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file. If the health check fails, you should check the readinessProbe configured for Citrix ADC CPX. For more information, see [readinessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes) and [external Load balancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/).
+    !!! note "Note"  
+        The health check for the cloud load-balancer is obtained from the readinessProbe configured in the [Citrix ADC CPX deployment yaml](https://github.com/citrix/citrix-k8s-ingress-controller/blob/master/deployment/azure/manifest/cpx_service.yaml) file. 
+
+		If the health check fails, you should check the readinessProbe configured for Citrix ADC CPX. For more information, see [readinessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-readiness-probes) and [external Load balancer](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/).
 
 1.  Access the application using the following command.
 
@@ -77,7 +79,7 @@ You can use the following deployment solutions for deploying Citrix ADC CPX as a
 -  High availability Citrix ADC CPX deployment
 -  Citrix ADC CPX per node deployment
 
-!!! note “Note”
+!!! note "Note"
     For the ease of deployment, the deployment models in this section are explained with an all-in-one manifest file that combines the steps explained in the previous section. You can modify the manifest file to suit your application and configuration.
 
 ### Deploy a standalone Citrix ADC CPX as the Ingress device
@@ -88,24 +90,18 @@ To deploy Citrix ADC CPX as an Ingress device in a standalone deployment model i
 
 Perform the following steps to deploy a stand-alone Citrix ADC CPX as the ingress device.
 
-1. Deploy a Citrix ADC CPX ingress with in built Citrix Ingress Controller in your Kubernetes cluster using the following command.
+1.  Deploy a Citrix ADC CPX ingress with in built Citrix Ingress Controller in your Kubernetes cluster using the following command.
 
-    
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one.yaml
-    
 
-1. Access the application using the following command.
+1.  Access the application using the following command.
 
-    
         curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
-    
 
-    !!! note “Note”
+    !!! note "Note"
         To delete the deployment, use the following command:
 
-    
-        kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one.yaml
-    
+        	kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one.yaml
 
 ### Deploy Citrix ADC CPX for high availability
 
@@ -115,19 +111,15 @@ In the standalone deployment of Citrix ADC CPX as the Ingress, if the ingress de
 
 Perform the following steps to deploy two Citrix ADC CPX devices for high availability.
 
-1. Deploy Citrix ADC CPX ingress devices for high availability in your Kubernetes cluster by using the following command.
+1.  Deploy Citrix ADC CPX ingress devices for high availability in your Kubernetes cluster by using the following command.
 
-   
         kubectl create -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-ha.yaml
-   
 
-1. Access the application using the following command.
+1.  Access the application using the following command.
 
-   
         curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com'
-    
 
-    !!! note “Note”
+    !!! note "Note"
         To delete the deployment, use the following command:
 
                 kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-ha.yaml
@@ -148,7 +140,7 @@ Perform the followings steps to deploy Citrix ADC CPX as an ingress device on ea
 
         curl http://<External-ip-of-loadbalancer>/ -H 'Host: citrix-ingress.com
 
-    !!! note “Note”
+    !!! note "Note"
         To delete the deployment, use the following command:
 
-        kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-reliable.yaml
+        	kubectl delete -f https://raw.githubusercontent.com/citrix/citrix-k8s-ingress-controller/master/deployment/azure/manifest/all-in-one-reliable.yaml
